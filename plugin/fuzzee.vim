@@ -45,7 +45,6 @@ function! s:fuzzglob(arg,L,P)
 
   if a:arg =~ '^\.\/'
     let s:head = "."
-    let f = substitute(a:arg, '^\.\/', '', '')
   endif
 
   if a:arg =~ '^\.\.\/'
@@ -69,7 +68,12 @@ function! s:fuzzglob(arg,L,P)
   elseif &buftype == 'nofile'
     let ls = globpath('%', f)
   else
-    let ls  = globpath('%:h', f)
+    if s:head !~ '^$'
+      let f = substitute(f, '^\.\*', '\.', '')
+      let ls = globpath(getcwd(), f)
+    else
+      let ls  = globpath('%:h', f)
+    endif
     let ls2 = map(copy(split(ls, "\n")), 'substitute(v:val, "^\.\/", "", "")')
     let ls  = join(ls2, "\n")
   endif
