@@ -1,7 +1,0 @@
-fuzzee	fuzzee.txt	/*fuzzee*
-fuzzee-:F	fuzzee.txt	/*fuzzee-:F*
-fuzzee-about	fuzzee.txt	/*fuzzee-about*
-fuzzee-author	fuzzee.txt	/*fuzzee-author*
-fuzzee-tips	fuzzee.txt	/*fuzzee-tips*
-fuzzee-usage	fuzzee.txt	/*fuzzee-usage*
-fuzzee.vim	fuzzee.txt	/*fuzzee.vim*
