@@ -24,7 +24,7 @@ to the current buffer. `birthday_party.vim` would be matched but `funcakes.txt`
 wouldn't. 
 
 Navigate to other directories simply by typing their paths. `~` (or
-the mistyped `\``) will expand the the user's `$HOME`.
+the mistyped \`) will expand the the user's `$HOME`.
 
 If a filepath is fuzzily typed such as `ap/cf` for `app/coffeescripts`,
 Fuzzee.vim will autocomplete to that path. For searching files within a given
@@ -68,8 +68,8 @@ Links
 -----
 
 [GitHub Repo](http://github.com/mattsacks/vim-fuzzee/)  
-[vim.org]()  
+[vim.org](http://www.vim.org/scripts/script.php?script_id=3716)  
 [Github Author](http://github.com/mattsacks/)  
 [Twitter](http://twitter.com/mattsa)  
 
-Credit to @tpope for his fuzzy-globbing utility.
+Credit to [@tpope](https://github.com/tpope) for his fuzzy-globbing utility.
