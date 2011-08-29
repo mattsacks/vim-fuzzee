@@ -44,6 +44,7 @@ function! s:fuzzglob(arg,L,P)
   endif
 
   if a:arg =~ '^\.\/'
+    let s:head = "."
     let f = substitute(a:arg, '^\.\/', '', '')
   endif
 
@@ -84,7 +85,7 @@ function! s:fuzzglob(arg,L,P)
   else
     if &buftype == 'nofile' && f == tail
       let s:head = fnamemodify(split(ls, "\n")[0], ':h')
-    elseif f == tail && &buftype != 'nofile'
+    elseif f == tail && &buftype != 'nofile' && s:head =~ '^$'
       let s:head = expand("%:h")
     endif
     if f == tail
