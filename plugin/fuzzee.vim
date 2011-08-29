@@ -2,7 +2,7 @@
 " Author: Matt Sacks <matt.s.sacks@gmail.com>
 " Version: 0.1
 
-if exists('g:loaded_fuzzee') || v:version < 702 || &cp
+if exists('g:loaded_fuzzee') || v:version < 700 || &cp
   finish
 endif
 let g:loaded_fuzzee = 1
