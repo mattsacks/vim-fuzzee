@@ -22,7 +22,7 @@ If your current buffer is `foo.txt` and you'd like to edit `bar.txt` from the
 same directory then any combination the letters in the filename will edit it.
 For instance, `:F bt` will complete to `bar.txt` if it is the only file with `b`
 and `t` in it's name. Otherwise, it will expand to all possible matches relative
-to the current buffer. `birthday_party.vim` would be matched but `funcakes.txt`
+to the current buffer. `birthday_party.vim` would match `bt` but `funcakes.txt`
 wouldn't. 
 
 Navigate to other directories simply by typing their paths. `~` (or
@@ -47,22 +47,27 @@ following in your `.vimrc`.
 
     set wcm=<C-z>
     cnoremap ,pj <S-Left>public/javascripts/<End><C-z>
+    cnoremap ,,pj public/javascripts/<C-z>
 
 This let's you type `:F foo,pj` to expand the first file that matches `*f*o*o*`
-within that directory. See `:h wcm` and `:h mapmode-c` for more details.
+within that directory. Adding a comma as `:f ,,pj` will show the autocomplete
+menu for that directory. See `:h wcm` and `:h mapmode-c` for more details.
 
 Hitting `<C-w>` with any expanded path deletes back to the last Word - use to
 move up directories quickly.
 
+Specify root directory completion over relative buffers by adding `/` or
+prepended `./`.
+
 Some recommended vimrc settings:
 
     nnoremap <Leader>f :F<Space>
-    set wildmode=list,full 
+    set wildmode=list,full
     set wildmenu 
     set wildignore+=
         \*.png,*.jpg,*.pdf, 
         \CVS,SVN, 
-        \ " more files to ignore here
+        \" more files to ignore here
 
 This plugin leverages `expand("%:h")` in Vim which gets weird sometimes when in
 a directory. Mostly it happens when navigating to directories when using `:edit`
