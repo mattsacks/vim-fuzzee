@@ -9,9 +9,11 @@ ignores files, directories, and filetypes listed in the user-defined
 Install
 -------
 
-Install with [vim-pathogen](https://github.com/tpope/vim-pathogen) in your `~/.vimbundles/` folder. 
+Install with [vim-pathogen](https://github.com/tpope/vim-pathogen) in your
+`~/.vimbundles/` folder. 
 
-Or you can extract `fuzzee.vim` from `plugins/` and place it in your `~/.vim/plugins/` directory with the others.
+Or you can extract `fuzzee.vim` from `plugins/` and place it in your
+`~/.vim/plugins/` directory with the others.
 
 Usage
 -----
@@ -30,7 +32,8 @@ If a filepath is fuzzily typed such as `ap/cf` for `app/coffeescripts`,
 Fuzzee.vim will autocomplete to that path. For searching files within a given
 directory, append a `/` such as `:F app/cf/`, hit `<TAB>`, and it will
 autocomplete any files in `app/coffeescripts/`. Omitting the trailing `/` as in
-`ap/cf` will open the `:Explore` command on that directory opening up your file explorer in vim.
+`ap/cf` will run the `:Explore` command on that directory opening up your file
+explorer in vim.
 
 `:F .` will open up the explorer on whatever your current Vim working directory
 is. `:F ` with no arguments will open up the explorer on the current buffer.
@@ -45,14 +48,15 @@ following in your `.vimrc`.
     set wcm=<C-z>
     cnoremap ,pj <S-Left>public/javascripts/<End><C-z>
 
-This let's you type `:F foo,pj` to expand the first file that matches `f*o*o*`
+This let's you type `:F foo,pj` to expand the first file that matches `*f*o*o*`
 within that directory. See `:h wcm` and `:h mapmode-c` for more details.
 
-Hitting `<C-w>` with any expanded path deletes back to the last Word - use to move up directories quickly.
+Hitting `<C-w>` with any expanded path deletes back to the last Word - use to
+move up directories quickly.
 
 Some recommended vimrc settings:
 
-    nnoremap <Leader>f :F <Space> 
+    nnoremap <Leader>f :F<Space>
     set wildmode=list,full 
     set wildmenu 
     set wildignore+=

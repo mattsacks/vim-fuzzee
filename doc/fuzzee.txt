@@ -32,9 +32,9 @@ some arguments have special connotation.
 
 :F [directory]                  Fuzzy-complete any directory with '/' as it's
                                 first character and execute 'edit' on them,
-                                opening up the the explorer if the last
-                                character is '/', otherwise opening up the
-                                first match.
+                                opening up the the explorer. If the last
+                                character is '/', open the first match inside
+                                that directory.
 
 TIPS                                         *fuzzee-tips*
 
