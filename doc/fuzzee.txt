@@ -1,0 +1,58 @@
+*fuzzee.vim* Fuzzy expansions for :e and :E
+
+Author: Matt Sacks <matt.s.sacks@gmail.com>  *fuzzee-author*
+License: Same terms as Vim itself (see |license|)
+
+This plugin is only available for Vim version 7.2 and higher with 'compatible'
+set.
+
+INTRODUCTION                                 *fuzzee*
+
+Install in ~/.vim or use vim-pathogen and install into ~/.vimbundles.
+
+USAGE                                        *fuzzee-usage*
+
+Fuzzee.vim has only one command, |:F|. It doesn't require any arguments, but
+some arguments have special connotation.
+
+                                             *fuzzee-:F* 
+:F                              Open up |:Explore| on the current buffer.
+
+:F .                            Open up |:Explore| on the current Vim working
+                                directory.
+
+:F ` 
+:F ~                            Complete to the user's '$HOME' directory.
+
+:F [args]                       Fuzzy-complete any args relative to the current
+                                buffer and execute 'edit'.
+
+:F ../[args]                    Fuzzy-complete any args relative to the
+                                directory above the current buffer. 
+
+:F [directory]                  Fuzzy-complete any directory with '/' as it's
+                                first character and execute 'edit' on them,
+                                opening up the the explorer if the last
+                                character is '/', otherwise opening up the
+                                first match.
+
+TIPS                                         *fuzzee-tips*
+
+Fuzzee.vim can be used to navigate common paths and files quickly. If your
+typing out paths to filesnames quite often, mappings can shortcut them for
+you. Remember - these paths are local to the current working directory or
+buffer. Use |:lcd| to configure this. 
+
+See the README for more information.
+
+ABOUT                                        *fuzzee-about*
+
+This plugin is used simply to leverage 'edit' with fuzzy-completion both local
+to the current buffer and any specified path. It also uses any 'wildignore' settings.
+
+For the most up to date development version or to report any inevitable bugs,
+please visit:
+
+http://github.com/mattsacks/vim-fuzzee
+
+ vim:tw=78:et:ft=help:norl:
