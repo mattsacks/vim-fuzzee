@@ -66,7 +66,11 @@ function! s:fuzzglob(arg,L,P)
   if f == tail && &buftype != 'nofile'
     let ls = globpath("%:h", f)
   elseif &buftype == 'nofile'
-    let ls = globpath('%', f)
+    if s:head !~ '^$'
+      let ls = globpath(getcwd(), f)
+    else
+      let ls = globpath('%', f)
+    endif
   else
     if s:head !~ '^$'
       let f = substitute(f, '^\.\*', '\.', '')
@@ -115,6 +119,9 @@ function! s:F(...)
   endif
 
   let f = s:fuzzglob(a:1, '', '')
+  if s:head =~ '^\.' && f[0][0] == '/'
+    let s:head = ''
+  endif
   if len(f) == 0
     return
   elseif s:head !~ '^$'
@@ -124,6 +131,7 @@ function! s:F(...)
     let f[0] = substitute(f[0], '\s', '\\ ' ,'g')
     execute "silent! edit" f[0]
   endif
+  execute "silent! lcd" getcwd()
 endfunction
 
 command! -nargs=? -complete=customlist,s:fuzzglob F :execute s:F(<f-args>)
