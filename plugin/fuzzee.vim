@@ -62,15 +62,18 @@ function! s:fuzzglob(arg,L,P)
 
   let f    = s:gsub(s:gsub(f,'[^/.]','[&]*'),'%(/|^)\.@!|\.','&*')
   let f    = substitute(f, '\*\[[~`]\]\*', '$HOME', '')
+  let f    = substitute(f, '\*[\*\]\*', '\*\*\/\*', 'g') 
   let tail = fnamemodify(f, ':t')
   
   " if completing a directory
   if f == tail && &buftype != 'nofile'
     let ls = globpath('%:h', f)
   elseif &buftype == 'nofile'
-    if s:head !~ '^$'
+    if (s:head !~ '^$') || (f =~ '^\*\*\/')
       let ls = globpath(getcwd(), f)
-    elseif expand("%") =~ '^\/$'
+    elseif f =~# '^$HOME'
+      let ls = globpath(f, "*")
+    elseif expand("%") =~ '^\/$' 
       let ls = globpath('/', f)
     else
       let ls = globpath('%', f)
@@ -79,6 +82,10 @@ function! s:fuzzglob(arg,L,P)
     if s:head !~ '^$'
       let f = substitute(f, '^\.\*', '\.', '')
       let ls = globpath(getcwd(), f)
+    elseif f =~ '^\*\*\/'
+      let ls = globpath(getcwd(), f)
+      let ls2 = map(copy(split(ls, "\n")), 'substitute(v:val, getcwd()."/", "", "")') 
+      let ls  = join(ls2, "\n")
     else
       let ls  = globpath('%:h', f)
     endif
