@@ -39,9 +39,10 @@ explorer in vim.
 is. `:F ` with no arguments will open up the explorer on the current buffer.
 
 Commands also available for opening files or the explorer:
-    * `:FS` - opens up in a split
-    * `:FV` - opens in a vertical split
-    * `:FT` - opens in a new tab
+
+* `:FS` - opens up in a split
+* `:FV` - opens in a vertical split
+* `:FT` - opens in a new tab
 
 Tips
 ----
