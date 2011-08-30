@@ -38,6 +38,11 @@ explorer in vim.
 `:F .` will open up the explorer on whatever your current Vim working directory
 is. `:F ` with no arguments will open up the explorer on the current buffer.
 
+Commands also available for opening files or the explorer:
+    * `:FS` - opens up in a split
+    * `:FV` - opens in a vertical split
+    * `:FT` - opens in a new tab
+
 Tips
 ----
 

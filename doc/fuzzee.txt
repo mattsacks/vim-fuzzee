@@ -18,6 +18,19 @@ some arguments have special connotation.
                                              *fuzzee-:F* 
 :F                              Open up |:Explore| on the current buffer.
 
+                                             *fuzzee-:FS*
+:FS                             Open up in a split. With no arguments, this
+                                calls |:Sexplore|.
+                                            
+                                             *fuzzee-:FV*
+:FV                             Open up in a vertical split. With no
+                                arguments, this calls |:Vexplore|.
+
+                                             *fuzzee-:FT*
+:FT                             Open up in a new tab. With no arguments, this
+                                calls |:Texplore|.
+
+
 :F .                            Open up |:Explore| on the current Vim working
                                 directory.
 
