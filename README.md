@@ -43,6 +43,8 @@ Commands also available for opening files or the explorer:
 * `:FS` - opens up in a split
 * `:FV` - opens in a vertical split
 * `:FT` - opens in a new tab
+* `:FL` - change local working directory
+* `:FC` - change working directory
 
 Tips
 ----
