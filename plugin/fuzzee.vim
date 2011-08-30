@@ -17,9 +17,9 @@ endfunction
 
 function! s:sortlist(ls, tail)
   if a:tail
-    return sort(map(copy(split(a:ls, '\n')), 'fnamemodify(v:val, ":t")'), 's:sortfile')
+    return sort(map(copy(split(a:ls, "\n")), 'fnamemodify(v:val, ":t")'), 's:sortfile')
   else
-    return sort(split(a:ls, '\n'), 's:sortfile')
+    return sort(split(a:ls, "\n"), 's:sortfile')
   endif
 endfunction
 
@@ -27,35 +27,35 @@ function! s:fuzzglob(arg,L,P)
   let s:head = ''
   if a:arg =~ '^\s*$'
     if &buftype == 'nofile'
-      if expand("%") =~ '^$' " new buffer is blank
+      if expand('%') =~ '^$' " new buffer is blank
         return s:sortlist(globpath('/', '*'), 1)
       else
-        return s:sortlist(globpath("%".'/', "*"), 1)
+        return s:sortlist(globpath('%'.'/', '*'), 1)
       endif
-    elseif expand("%") =~ '^$'
+    elseif expand('%') =~ '^$'
       return s:sortlist(globpath(getcwd(), '*'), 1)
     else 
-      return s:sortlist(globpath("%:h", "*"), 1)
+      return s:sortlist(globpath('%:h', '*'), 1)
     endif
   endif
 
   let f = a:arg
 
   if a:arg =~ '^\/$'
-    return s:sortlist(globpath('/', "*"), 0)
+    return s:sortlist(globpath('/', '*'), 0)
   endif
 
   if a:arg =~ '^\.\/'
-    let s:head = "."
+    let s:head = '.'
   endif
 
   if a:arg =~ '^\.\.\/'
     let dots = matchlist(a:arg, '^\(\.\.\/\)\+')[0]
     let path = matchlist(a:arg, '^\%(\.\.\/\)\+\(.*\)$')[1]
     if &buftype == 'nofile'
-      let f = fnamemodify(expand("%").'/'.dots, ':p')
+      let f = fnamemodify(expand('%').'/'.dots, ':p')
     else
-      let f = fnamemodify(expand("%:h").'/'.dots, ':p')
+      let f = fnamemodify(expand('%:h').'/'.dots, ':p')
     endif
     let f = f.path
   endif
@@ -66,10 +66,12 @@ function! s:fuzzglob(arg,L,P)
   
   " if completing a directory
   if f == tail && &buftype != 'nofile'
-    let ls = globpath("%:h", f)
+    let ls = globpath('%:h', f)
   elseif &buftype == 'nofile'
     if s:head !~ '^$'
       let ls = globpath(getcwd(), f)
+    elseif expand("%") =~ '^\/$'
+      let ls = globpath('/', f)
     else
       let ls = globpath('%', f)
     endif
@@ -86,7 +88,7 @@ function! s:fuzzglob(arg,L,P)
 
   if len(ls) == 0 && tail !~ '\.'
     if len(glob(f)) == 0
-      echomsg "not found"
+      echomsg 'not found'
       return ''
     endif
     return s:sortlist(glob(f), 0)
@@ -96,7 +98,7 @@ function! s:fuzzglob(arg,L,P)
     if &buftype == 'nofile' && f == tail
       let s:head = fnamemodify(split(ls, "\n")[0], ':h')
     elseif f == tail && &buftype != 'nofile' && s:head =~ '^$'
-      let s:head = expand("%:h")
+      let s:head = expand('%:h')
     endif
     if f == tail
       return s:sortlist(ls, 1)
@@ -111,42 +113,40 @@ function! s:F(cmd, ...)
              \'L': 'lcd', 'C': 'cd'}
   let cwd  = ['L', 'C']
   let cmd  = cmds[a:cmd]
-  if index(cwd, a:cmd) !=# -1
-    let goal = a:cmd
-  elseif a:cmd ==# 'E'
-    let goal = a:cmd.'xplore '
-  else
-    let goal = a:cmd.'explore '
-  endif
 
   if a:0 == 0
     if index(cwd, a:cmd) !=# -1
       return
     elseif &buftype == 'nofile'
-      return 'silent! '.goal.'%'
+      return 'silent! '.cmd.'%'
     else
-      return 'silent! '.goal.'%:h'
+      return 'silent! '.cmd.'%:h'
     endif
   endif
 
   if a:1 =~ '^\.$'
-    return 'silent! '.goal.getcwd()
+    if expand("%") !~# '^$' && index(cwd, a:cmd) !=# -1
+      return 'silent! '.cmd.'%'
+    else
+      return 'silent! '.cmd.getcwd()
+    endif
   endif
 
   let f = s:fuzzglob(a:1, '', '')
-  if s:head =~ '^\.' && f[0][0] == '/'
+  if (s:head =~ '^\.' && f[0][0] == '/') || s:head =~ '^\/$'
     let s:head = ''
   endif
   if len(f) == 0
     return
   elseif s:head !~ '^$'
     let f[0] = substitute(f[0], '\s', '\\ ' ,'g')
-    execute "silent! ".cmd s:head.'/'.f[0]
+    execute 'silent! '.cmd s:head.'/'.f[0]
   else
     let f[0] = substitute(f[0], '\s', '\\ ' ,'g')
-    execute "silent! ".cmd f[0]
+    execute 'silent! '.cmd f[0]
   endif
-  execute "silent! lcd" getcwd()
+  " because my paths suck
+  execute 'silent! lcd' getcwd()
 endfunction
 
 command! -nargs=? -complete=customlist,s:fuzzglob F  :execute s:F('E', <f-args>)
