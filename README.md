@@ -61,6 +61,11 @@ This let's you type `:F foo,pj` to expand the first file that matches `*f*o*o*`
 within that directory. Adding a comma as `:f ,,pj` will show the autocomplete
 menu for that directory. See `:h wcm` and `:h mapmode-c` for more details.
 
+Vim has a global working directory (`:cd`) and a local to window (that includes
+splits) working directory (`:lcd`). Use these for making project paths relative
+and not absolute (`app/dir` instead of `/Users/foo/dev/app/dir`). Play around
+with `:pwd` as well to see how this works.
+
 Hitting `<C-w>` with any expanded path deletes back to the last Word - use to
 move up directories quickly.
 
