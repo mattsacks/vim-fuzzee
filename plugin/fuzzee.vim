@@ -27,11 +27,13 @@ function! s:fuzzglob(arg,L,P)
   let s:head = ''
   if a:arg =~ '^\s*$'
     if &buftype == 'nofile'
-      if expand("%") =~ '^$' " buffer is blank at root
+      if expand("%") =~ '^$' " new buffer is blank
         return s:sortlist(globpath('/', '*'), 1)
       else
         return s:sortlist(globpath("%".'/', "*"), 1)
       endif
+    elseif expand("%") =~ '^$'
+      return s:sortlist(globpath(getcwd(), '*'), 1)
     else 
       return s:sortlist(globpath("%:h", "*"), 1)
     endif
