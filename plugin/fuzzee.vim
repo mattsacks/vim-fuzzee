@@ -1,6 +1,6 @@
 " fuzzee.vim - Fuzzy expansions for :e and :E
 " Author: Matt Sacks <matt.s.sacks@gmail.com>
-" Version: 0.2
+" Version: 0.3
 
 if exists('g:loaded_fuzzee') || v:version < 700 || &cp
   finish
@@ -107,16 +107,22 @@ function! s:fuzzglob(arg,L,P)
 endfunction
 
 function! s:F(cmd, ...)
-  let cmds = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit'}
+  let cmds = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit',
+             \'L': 'lcd', 'C': 'cd'}
+  let cwd  = ['L', 'C']
   let cmd  = cmds[a:cmd]
-  if a:cmd == 'E'
+  if index(cwd, a:cmd) !=# -1
+    let goal = a:cmd
+  elseif a:cmd ==# 'E'
     let goal = a:cmd.'xplore '
   else
     let goal = a:cmd.'explore '
   endif
 
   if a:0 == 0
-    if &buftype == 'nofile'
+    if index(cwd, a:cmd) !=# -1
+      return
+    elseif &buftype == 'nofile'
       return 'silent! '.goal.'%'
     else
       return 'silent! '.goal.'%:h'
@@ -147,3 +153,5 @@ command! -nargs=? -complete=customlist,s:fuzzglob F  :execute s:F('E', <f-args>)
 command! -nargs=? -complete=customlist,s:fuzzglob FS :execute s:F('S', <f-args>)
 command! -nargs=? -complete=customlist,s:fuzzglob FV :execute s:F('V', <f-args>)
 command! -nargs=? -complete=customlist,s:fuzzglob FT :execute s:F('T', <f-args>)
+command! -nargs=? -complete=customlist,s:fuzzglob FL :execute s:F('L', <f-args>)
+command! -nargs=? -complete=customlist,s:fuzzglob FC :execute s:F('C', <f-args>)

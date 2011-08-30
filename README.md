@@ -10,7 +10,7 @@ Install
 -------
 
 Install with [vim-pathogen](https://github.com/tpope/vim-pathogen) in your
-`~/.vimbundles/` folder. 
+configured bundles folder. 
 
 Or you can extract `fuzzee.vim` from `plugins/` and place it in your
 `~/.vim/plugins/` directory with the others.
@@ -68,7 +68,7 @@ prepended `./`.
 Some recommended vimrc settings:
 
     nnoremap <Leader>f :F<Space>
-    set wildmode=list,full
+    set wildmode=list:full
     set wildmenu 
     set wildignore+=
         \*.png,*.jpg,*.pdf, 

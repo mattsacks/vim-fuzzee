@@ -3,7 +3,7 @@
 Author: Matt Sacks <matt.s.sacks@gmail.com>  *fuzzee-author*
 License: Same terms as Vim itself (see |license|)
 
-This plugin is only available for Vim version 7.2 and higher with 'compatible'
+This plugin is only available for Vim version 7.0 and higher with 'compatible'
 set.
 
 INTRODUCTION                                 *fuzzee*
@@ -30,7 +30,15 @@ some arguments have special connotation.
 :FT                             Open up in a new tab. With no arguments, this
                                 calls |:Texplore|.
 
+                                             *fuzzee-:FL*
+:FL [directory]                 Changes local directory |:lcd| to a given
+                                argument.
 
+                                             *fuzzee-:FC*
+:FC [directory]                 Changes working directory |:cd| to a given
+                                argument.
+
+                                             *fuzzee-arguments*
 :F .                            Open up |:Explore| on the current Vim working
                                 directory.
 
