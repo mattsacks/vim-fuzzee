@@ -45,6 +45,13 @@ some arguments have special connotation.
 :F ` 
 :F ~                            Complete to the user's '$HOME' directory.
 
+                                             *fuzzee-globbing*
+:F *                            Look for anything after * in any directory
+                                under the current buffer.
+
+:F */                           Look for anything after */ in any directory
+                                under the current working directory.
+
 :F [args]                       Fuzzy-complete any args relative to the current
                                 buffer and execute 'edit'.
 
@@ -64,12 +71,17 @@ typing out paths to filesnames quite often, mappings can shortcut them for
 you. Remember - these paths are local to the current working directory or
 buffer. Use |:lcd| to configure this. 
 
+Globbing is only as fast as the information that you give it. With each
+character before and after *, Vim will find your file quicker. Be careful with
+globbing as it increases the chances you won't find the correct file.
+
 See the README for more information.
 
 ABOUT                                        *fuzzee-about*
 
 This plugin is used simply to leverage 'edit' with fuzzy-completion both local
-to the current buffer and any specified path. It also uses any 'wildignore' settings.
+to the current buffer and any specified path. It also uses any 'wildignore'
+settings.
 
 For the most up to date development version or to report any inevitable bugs,
 please visit:

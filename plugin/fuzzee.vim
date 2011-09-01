@@ -84,6 +84,14 @@ function! s:fuzzglob(arg,L,P)
       let ls = substitute(globpath(f, ''), '\/$', '', 'g')
     elseif dir =~ '^\/$'
       let ls = globpath('/', f)
+    elseif a:arg =~ '^*\/'
+      let ls = globpath(cwd, f)."\n"
+             \.globpath(cwd, fnamemodify(f, ':t'))
+      let ls = s:filterglob(ls, cwd)
+    elseif a:arg =~  '^*'
+      let s:head = dir
+      let ls = globpath(dir, f)
+      let ls = s:filterglob(ls, cwd)
     else
       let ls = globpath(dir, f)
     endif

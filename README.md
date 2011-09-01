@@ -4,7 +4,7 @@ fuzzee.vim
 Fuzzee.vim will tab-complete paths relative to the current working directory in
 Vim and also the current buffer for use with `:e[dit]` and `:E[xplore]`. It also
 ignores files, directories, and filetypes listed in the user-defined
-`wildignore` setting.
+`wildignore` setting and has support for multi-directory globbing.
 
 Install
 -------
@@ -37,6 +37,12 @@ explorer in vim.
 
 `:F .` will open up the explorer on whatever your current Vim working directory
 is. `:F ` with no arguments will open up the explorer on the current buffer.
+
+Use `*` to glob multiple directories. For example, `:F ~/dro*foo` will find
+`~/Dropbox/dev/foo` or any combination of `*d*r*o*f*o*o*` in your home
+directory. `*` is relative globbing - that is, it globs from the current buffer.
+Use `*/` to search for anything in your current working directory, as `*/aplcont`
+will find `app/controllers/application_controller`.
 
 Commands also available for opening files or the explorer:
 
@@ -75,16 +81,13 @@ prepended `./`.
 Some recommended vimrc settings:
 
     nnoremap <Leader>f :F<Space>
+    nnoremap <Leader>t :F */
     set wildmode=list:full
     set wildmenu 
     set wildignore+=
         \*.png,*.jpg,*.pdf, 
         \CVS,SVN, 
         \" more files to ignore here
-
-This plugin leverages `expand("%:h")` in Vim which gets weird sometimes when in
-a directory. Mostly it happens when navigating to directories when using `:edit`
-with a trailing `/` at the end of the argument. So try not to do that.
 
 Links
 -----
