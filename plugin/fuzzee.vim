@@ -59,8 +59,8 @@ function! s:fuzzglob(arg,L,P)
   let cwd   = escape(getcwd(), ' ')
 
   if a:arg =~ '^\.\.\/'
-    let dots = matchlist(a:arg, '^\(\.\.\/\)\+')[0]
-    let path = matchlist(a:arg, '^\%(\.\.\/\)\+\(.*\)$')[1]
+    let dots = matchlist(a:arg, '\(\.\.\/\)\+')[0]
+    let path = matchlist(a:arg, '\%(\.\.\/\)\+\(.*\)$')[1]
     if &buftype == 'nofile'
       let f = fnamemodify(dir.'/'.dots, ':p')
     else
@@ -134,10 +134,10 @@ function! s:fuzzglob(arg,L,P)
 endfunction
 
 function! s:F(cmd, ...)
-  let cmds = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit',
+  let cmds  = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit',
              \'L': 'lcd', 'C': 'cd'}
-  let chdir  = ['L', 'C']
-  let cmd  = cmds[a:cmd]
+  let chdir = ['L', 'C']
+  let cmd   = cmds[a:cmd]
   let dir   = substitute(escape(expand('%'), ' '), '\(.\)/$', '\1', '')
   let updir = substitute(escape(expand('%:h'), ' '), '\(.\)/$', '\1', '')
   let cwd   = substitute(escape(getcwd(), ' '), '\(.\)/$', '\1', '')
