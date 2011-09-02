@@ -1,49 +1,64 @@
 *fuzzee.vim* Fuzzy expansions for :e and :E
 
-Author: Matt Sacks <matt.s.sacks@gmail.com>  *fuzzee-author*
-License: Same terms as Vim itself (see |license|)
+                                             *fuzzee-author*
+Author:    Matt Sacks <matt.s.sacks@gmail.com>
+Copyright: Matt Sacks (c)
+License:   Same terms as Vim itself (see |license|)
 
-This plugin is only available for Vim version 7.0 and higher with 'compatible'
-set.
+This plugin is works with Vim version 7.0 and higher.
+
 
 INTRODUCTION                                 *fuzzee*
 
-Install in ~/.vim or use vim-pathogen and install into ~/.vimbundles.
+Install fuzzee.vim into ~/.vim/plugins/ and fuzzee.txt into
+~/.vim/doc/ or use vim-pathogen and install into your designated
+bundles folder.
+
 
 USAGE                                        *fuzzee-usage*
 
-Fuzzee.vim has only one command, |:F|. It doesn't require any arguments, but
-some arguments have special connotation.
+Fuzzee.vim has different commands but they all accept the same type of
+fuzzy-name argument. Any arg to |:F| can be a typed string that, when
+expanded, returns some filename or directory on your system. For example,
+|:F| ~/lo/p/t/f   would return  '/Users/you/long/path/to/foo.txt'
+|:F| ~/long*foot  also works as well
 
-                                             *fuzzee-:F* 
-:F                              Open up |:Explore| on the current buffer.
+You don't always have to type in a full path - arguments can be
+relative paths instead of absolute ones. Say you're currently editing a file
+in '~/long/path' called 'bar.txt' and you wanted to edit the 'foo.txt' from
+the previous example. Since it's in a directory below the current one, use
+|:F| to/fo  to reach 'to/foo.txt'
+|:F| *foot  is a globbed version
 
-                                             *fuzzee-:FS*
-:FS                             Open up in a split. With no arguments, this
-                                calls |:Sexplore|.
-                                            
-                                             *fuzzee-:FV*
-:FV                             Open up in a vertical split. With no
-                                arguments, this calls |:Vexplore|.
 
-                                             *fuzzee-:FT*
-:FT                             Open up in a new tab. With no arguments, this
-                                calls |:Texplore|.
+ARGUMENTS                                     *fuzzee-arguments*
 
-                                             *fuzzee-:FL*
-:FL [directory]                 Changes local directory |:lcd| to a given
-                                argument.
+This plugin can glob for 3 types of fuzzy-typed arguments:
+    * Those relative to the current buffer
+    * Arguments relative to the current working directory
+    * Absolute paths
 
-                                             *fuzzee-:FC*
-:FC [directory]                 Changes working directory |:cd| to a given
-                                argument.
+:F [args]                       Fuzzy-complete any args relative to the
+                                current buffer and execute 'edit'.
 
-                                             *fuzzee-arguments*
-:F .                            Open up |:Explore| on the current Vim working
-                                directory.
+:F ../[args]                    Fuzzy-complete any args relative to the
+                                directory above the current buffer. 
+
+:F ./[args]                     Fuzzy-complete any args relative to the
+                                current working directory.
+
+:F [directory]                  Fuzzy-complete any absolute directory with 
+                                ~ ` or / as it's first character or any
+                                relative directory and execute 'edit',
+                                opening up the the explorer. If the last
+                                character is / then open the first match
+                                inside that directory.
 
 :F ` 
-:F ~                            Complete to the user's '$HOME' directory.
+:F ~                            Complete starting at the user's '$HOME'
+                                directory.
+
+:F /                            Complete starting at the root directory.
 
                                              *fuzzee-globbing*
 :F *                            Look for anything after * in any directory
@@ -52,40 +67,77 @@ some arguments have special connotation.
 :F */                           Look for anything after */ in any directory
                                 under the current working directory.
 
-:F [args]                       Fuzzy-complete any args relative to the current
-                                buffer and execute 'edit'.
 
-:F ../[args]                    Fuzzy-complete any args relative to the
-                                directory above the current buffer. 
 
-:F [directory]                  Fuzzy-complete any directory with '/' as it's
-                                first character and execute 'edit' on them,
-                                opening up the the explorer. If the last
-                                character is '/', open the first match inside
-                                that directory.
+COMMANDS                                     *fuzzee-commands*
+
+Each of these commands perform a different task but they all execute on the
+same type of arguments. All of these accept any relative, absolute, or globbed
+filenames and directories for which to open quickly. If blank, they open up
+the explorer which is netrw by default. You can use |:F| from the explorer as
+well as the arguments by default are relative to the current working directory.
+
+                                             *fuzzee-:F* 
+:F                              Open up the directory above the current
+                                buffer.
+
+
+:F .                            Open up the current working directory.
+
+                                             *fuzzee-:FS*
+:FS                             Open up in a split. With no arguments, this
+                                splits to the directory above the current
+                                buffer.
+                                            
+                                             *fuzzee-:FV*
+:FV                             Open up in a split. With no arguments, this
+                                splits vertically to the directory above the
+                                current buffer.
+
+                                             *fuzzee-:FT*
+:FT                             Open up in a split. With no arguments, this
+                                opens a new tab to the directory above the
+                                current buffer.
+
+                                             *fuzzee-:FL*
+:FL                             Changes local directory |:lcd| to a given
+                                argument.
+
+                                             *fuzzee-:FC*
+:FC                             Changes working directory |:cd| to a given
+                                argument.
+
 
 TIPS                                         *fuzzee-tips*
 
 Fuzzee.vim can be used to navigate common paths and files quickly. If your
 typing out paths to filesnames quite often, mappings can shortcut them for
-you. Remember - these paths are local to the current working directory or
-buffer. Use |:lcd| to configure this. 
+you. Remember - these paths are shorter if they are local to the current
+working directory or buffer. See 'lcd' to configure this and use |:FL| to
+navigate quickly.
 
-Globbing is only as fast as the information that you give it. With each
-character before and after *, Vim will find your file quicker. Be careful with
-globbing as it increases the chances you won't find the correct file.
+It is highly recommended you do not use the 'autochdir' option. That
+changes the 'cwd' to always refer to the current buffer, losing any track
+of a "working directory" for your projects. |:F| works best when used
+against buffers and the 'cwd'.
 
-See the README for more information.
+Globbing is only as fast the more  information that you give it. With each
+character before and after * then Vim will be able to find your file
+more quickly.
+
+See the README for more information and tricks.
+
 
 ABOUT                                        *fuzzee-about*
 
-This plugin is used simply to leverage 'edit' with fuzzy-completion both local
-to the current buffer and any specified path. It also uses any 'wildignore'
-settings.
+This plugin is used to leverage 'edit' with fuzzy-completion both local to
+the current buffer, the current working directory, and any specified path.
+It also uses any 'wildignore' settings for faster globbing with *
 
 For the most up to date development version or to report any inevitable bugs,
 please visit:
 
 http://github.com/mattsacks/vim-fuzzee
+
 
  vim:tw=78:et:ft=help:norl:

@@ -25,21 +25,23 @@ and `t` in it's name. Otherwise, it will expand to all possible matches relative
 to the current buffer. `birthday_party.vim` would match `bt` but `funcakes.txt`
 wouldn't. 
 
-Navigate to other directories simply by typing their paths. `~` (or
-the mistyped \`) will expand the the user's `$HOME`.
+Absolute paths works as well. Navigate to other directories simply by typing
+their paths. `~` (or the mistyped \`) will expand the the user's `$HOME`. `/`
+will start completing at the root directory.
 
 If a filepath is fuzzily typed such as `ap/cf` for `app/coffeescripts`,
 Fuzzee.vim will autocomplete to that path. For searching files within a given
 directory, append a `/` such as `:F app/cf/`, hit `<TAB>`, and it will
 autocomplete any files in `app/coffeescripts/`. Omitting the trailing `/` as in
-`ap/cf` will run the `:Explore` command on that directory opening up your file
-explorer in vim.
+`:F ap/cf` will open up the vim file explorer on that directory.
 
 `:F .` will open up the explorer on whatever your current Vim working directory
-is. `:F ` with no arguments will open up the explorer on the current buffer.
+is. `:F ` with no arguments will open up the explorer on the current buffer. Use
+`:F ./` to always refer to files in the current working directory and use `:F
+../` to refer to the directory above the current buffer.
 
-Use `*` to glob multiple directories. For example, `:F ~/dro*foo` will find
-`~/Dropbox/dev/foo` or any combination of `*d*r*o*f*o*o*` in your home
+You can use `*` to glob multiple directories. For example, `:F ~/dro*foo` will find
+`~/Dropbox/dev/app/foo` or any combination of `*d*r*o*f*o*o*` in your home
 directory. `*` is relative globbing - that is, it globs from the current buffer.
 Use `*/` to search for anything in your current working directory, as `*/aplcont`
 will find `app/controllers/application_controller`.
@@ -55,9 +57,20 @@ Commands also available for opening files or the explorer:
 Tips
 ----
 
-Use Fuzzee.vim for exploring project directories quickly with `cmap`. For
-instance, to fuzzy match any javascripts in your `public` directory, save the
-following in your `.vimrc`.
+Some recommended vimrc settings:
+
+    nnoremap <Leader>f :F<Space>
+    nnoremap <Leader>t :F */
+    set wildmode=list:longest,full
+    set wildmenu
+    set wildignore+=
+        \*.png,*.jpg,*.pdf,
+        \CVS,SVN,
+        \" more files to ignore here
+
+Fuzzee.vim can be used for exploring project directories quickly with `cmap`. For
+instance, to match any javascripts in your `public` directory, try out the
+following:
 
     set wcm=<C-z>
     cnoremap ,pj <S-Left>public/javascripts/<End><C-z>
@@ -69,25 +82,11 @@ menu for that directory. See `:h wcm` and `:h mapmode-c` for more details.
 
 Vim has a global working directory (`:cd`) and a local to window (that includes
 splits) working directory (`:lcd`). Use these for making project paths relative
-and not absolute (`app/dir` instead of `/Users/foo/dev/app/dir`). Play around
-with `:pwd` as well to see how this works.
+and not absolute (`app/dir` instead of `/Users/foo/dev/app/dir`).
 
 Hitting `<C-w>` with any expanded path deletes back to the last Word - use to
 move up directories quickly.
 
-Specify root directory completion over relative buffers by adding `/` or
-prepended `./`.
-
-Some recommended vimrc settings:
-
-    nnoremap <Leader>f :F<Space>
-    nnoremap <Leader>t :F */
-    set wildmode=list:full
-    set wildmenu 
-    set wildignore+=
-        \*.png,*.jpg,*.pdf, 
-        \CVS,SVN, 
-        \" more files to ignore here
 
 Links
 -----

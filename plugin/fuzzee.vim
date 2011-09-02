@@ -1,8 +1,8 @@
 " fuzzee.vim - Fuzzy expansions for :e and :E
 " Author: Matt Sacks <matt.s.sacks@gmail.com>
-" Version: 0.3
+" Version: 0.4
 
-if exists('g:loaded_fuzzee') || v:version < 700 || &cp
+if exists('g:loaded_fuzzee') || v:version < 700
   finish
 endif
 let g:loaded_fuzzee = 1
