@@ -38,23 +38,24 @@ This plugin can glob for 3 types of fuzzy-typed arguments:
     * Arguments relative to the current working directory
     * Absolute paths
 
-:F [args]                       Fuzzy-complete any args relative to the
-                                current buffer and execute 'edit'.
+:F [args]                       Fuzzy-complete any filepath relative to the
+                                current buffer, the working directory, or any
+                                absolute path and execute 'edit'.
 
 :F ../[args]                    Fuzzy-complete any args relative to the
-                                directory above the current buffer. 
+                                directory above the current buffer.
 
 :F ./[args]                     Fuzzy-complete any args relative to the
                                 current working directory.
 
-:F [directory]                  Fuzzy-complete any absolute directory with 
+:F [directory]                  Fuzzy-complete any absolute directory with
                                 ~ ` or / as it's first character or any
                                 relative directory and execute 'edit',
                                 opening up the the explorer. If the last
                                 character is / then open the first match
                                 inside that directory.
 
-:F ` 
+:F `
 :F ~                            Complete starting at the user's '$HOME'
                                 directory.
 
@@ -77,27 +78,30 @@ filenames and directories for which to open quickly. If blank, they open up
 the explorer which is netrw by default. You can use |:F| from the explorer as
 well as the arguments by default are relative to the current working directory.
 
-                                             *fuzzee-:F* 
-:F                              Open up the directory above the current
-                                buffer.
+                                             *fuzzee-:F*
+:F                              With no arguments, open up the directory above
+                                the current buffer. Otherwise, this tab
+                                completes to the current buffer's
+                                directory. However, you can give it any
+                                fuzzy name of a file or pathname defined in
+                                the arguments section above.
 
-
-:F .                            Open up the current working directory.
+:F .                            Open the current working directory.
 
                                              *fuzzee-:FS*
-:FS                             Open up in a split. With no arguments, this
+:FS                             Open in a split. With no arguments, this
                                 splits to the directory above the current
                                 buffer.
-                                            
+
                                              *fuzzee-:FV*
-:FV                             Open up in a split. With no arguments, this
-                                splits vertically to the directory above the
-                                current buffer.
+:FV                             Open in a vertical split. With no arguments,
+                                this splits vertically to the directory above
+                                the current buffer.
 
                                              *fuzzee-:FT*
-:FT                             Open up in a split. With no arguments, this
-                                opens a new tab to the directory above the
-                                current buffer.
+:FT                             Open in a new tab. With no arguments, this
+                                opens to the directory above the current
+                                buffer.
 
                                              *fuzzee-:FL*
 :FL                             Changes local directory |:lcd| to a given
@@ -113,8 +117,8 @@ TIPS                                         *fuzzee-tips*
 Fuzzee.vim can be used to navigate common paths and files quickly. If your
 typing out paths to filesnames quite often, mappings can shortcut them for
 you. Remember - these paths are shorter if they are local to the current
-working directory or buffer. See 'lcd' to configure this and use |:FL| to
-navigate quickly.
+working directory or buffer. See 'lcd' on how to configure this and use
+|:FL| to navigate quickly.
 
 It is highly recommended you do not use the 'autochdir' option. That
 changes the 'cwd' to always refer to the current buffer, losing any track
@@ -125,7 +129,7 @@ Globbing is only as fast the more  information that you give it. With each
 character before and after * then Vim will be able to find your file
 more quickly.
 
-See the README for more information and tricks.
+See the README for more information, examples, and tricks.
 
 
 ABOUT                                        *fuzzee-about*
@@ -138,6 +142,5 @@ For the most up to date development version or to report any inevitable bugs,
 please visit:
 
 http://github.com/mattsacks/vim-fuzzee
-
 
  vim:tw=78:et:ft=help:norl:

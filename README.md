@@ -6,53 +6,105 @@ Vim and also the current buffer for use with `:e[dit]` and `:E[xplore]`. It also
 ignores files, directories, and filetypes listed in the user-defined
 `wildignore` setting and has support for multi-directory globbing.
 
+
 Install
 -------
 
 Install with [vim-pathogen](https://github.com/tpope/vim-pathogen) in your
-configured bundles folder. 
+configured bundles folder.
 
 Or you can extract `fuzzee.vim` from `plugins/` and place it in your
 `~/.vim/plugins/` directory with the others.
 
+
 Usage
 -----
 
-If your current buffer is `foo.txt` and you'd like to edit `bar.txt` from the
-same directory then any combination the letters in the filename will edit it.
-For instance, `:F bt` will complete to `bar.txt` if it is the only file with `b`
-and `t` in it's name. Otherwise, it will expand to all possible matches relative
-to the current buffer. `birthday_party.vim` would match `bt` but `funcakes.txt`
-wouldn't. 
+The `:F` command can be given any fuzzily-typed string that, when expanded,
+matches some filepath on your system.
 
-Absolute paths works as well. Navigate to other directories simply by typing
-their paths. `~` (or the mistyped \`) will expand the the user's `$HOME`. `/`
-will start completing at the root directory.
+It accepts 3 different types of arguments:
 
-If a filepath is fuzzily typed such as `ap/cf` for `app/coffeescripts`,
-Fuzzee.vim will autocomplete to that path. For searching files within a given
-directory, append a `/` such as `:F app/cf/`, hit `<TAB>`, and it will
-autocomplete any files in `app/coffeescripts/`. Omitting the trailing `/` as in
-`:F ap/cf` will open up the vim file explorer on that directory.
+* Strings that expand to files relevant to the current buffer
+* The current working directory
+* Absolute paths
 
-`:F .` will open up the explorer on whatever your current Vim working directory
-is. `:F ` with no arguments will open up the explorer on the current buffer. Use
-`:F ./` to always refer to files in the current working directory and use `:F
-../` to refer to the directory above the current buffer.
+Let's give an example working directory and how `:F` can be used to navigate
+around it depending on what file you're currently viewing. Say the `cwd`, or
+current working directory, looks something like:
 
-You can use `*` to glob multiple directories. For example, `:F ~/dro*foo` will find
-`~/Dropbox/dev/app/foo` or any combination of `*d*r*o*f*o*o*` in your home
-directory. `*` is relative globbing - that is, it globs from the current buffer.
-Use `*/` to search for anything in your current working directory, as `*/aplcont`
-will find `app/controllers/application_controller`.
+**~/Dropbox/dev/project**
 
-Commands also available for opening files or the explorer:
+    app/
+        coffeescripts/
+    ******  application.coffee ******
+            models.coffee
+            collections.coffee
+    lib/
+        scripts.js
+    public/
+        stylesheets/
+            sass/
+            css/
+        javascripts/
+            application.js
+            models.js
+            collections.js
+    Cakefile
 
-* `:FS` - opens up in a split
-* `:FV` - opens in a vertical split
-* `:FT` - opens in a new tab
+First we'll use `:F` to  get to the working directory from a new Vim session in
+your home directory. Any of the following are sufficient:
+
+    :F ~/dr/de/pro  " search for /Users/you/*d*r*/*d*e*/*p*r*o*
+    :F `*dro*oje    " globs for any *o*j*e* under /Users/you/*d*r*
+    :F dr*project   " search for any filepath *d*r*p*r*o*j*e*c*t* under the cwd
+
+Then, either `:FL` or `:FL .` will both work to change the local working
+directory to the project path.
+
+A quick `:F */alcf` will glob the current working directory for `*a*l*c*f*` to
+edit `app/coffeescripts/application.coffee`.
+
+By hitting `:F <TAB>`, Fuzzee.vim will show you everything in the current
+buffer's directory first but that's only if you give it no arguments. So this
+will be everything in `app/coffeescripts/`. To move to `models.coffee` quickly,
+type `:F md`. Remember, by default it will always refer first in relation to the
+current buffer.
+
+`:F ./` will search for anything in the current working directory.  However,
+it's not always necessary. All of the following work to edit the `Cakefile` from
+the currently edited .coffee file:
+
+    :F cak          " search in the directory above the buffer for *c*a*k*. if 
+                    " nothing is found, then search the current working directory.
+    :F ./ckf        " search in the current working directory for *c*k*f*
+    :F */cake       " glob for any filepath of *c*a*k*e* under the cwd
+
+Respectively, `:F ../` will search for anything in the directory above what
+you're currently editing. So at `app/coffeescripts/application.coffee`, then that
+will look in `app/coffeescripts`.
+
+To open directories quickly, Fuzzee.vim can also be invoked with no arguments or
+just a `.`
+    
+    :F              " opens up the directory above the current buffer
+    :F .            " open the current working directory
+
+The fuzzy-expansion works for any filepath on your system no matter where you
+are but it can always backtrace to the current working directory as well.
+Primarily, it searches in relation to what you're currently viewing.
+
+
+Commands
+--------
+
+* `:F `  - open a fuzzy-string filepath
+* `:FS` - open up in a split
+* `:FV` - open in a vertical split
+* `:FT` - open in a new tab
 * `:FL` - change local working directory
 * `:FC` - change working directory
+
 
 Tips
 ----
@@ -68,32 +120,31 @@ Some recommended vimrc settings:
         \CVS,SVN,
         \" more files to ignore here
 
-Fuzzee.vim can be used for exploring project directories quickly with `cmap`. For
-instance, to match any javascripts in your `public` directory, try out the
-following:
+Fuzzee.vim can be used for exploring common project filepaths and directories
+quickly with `cmap`. For instance, to match any javascripts in your `public`
+directory, try out the following:
 
-    set wcm=<C-z>
-    cnoremap ,pj <S-Left>public/javascripts/<End><C-z>
+    set wcm=<C-z> " this is just a way to map <Tab> completion
+    cnoremap ,pj  <S-Left>public/javascripts/<End><C-z>
     cnoremap ,,pj public/javascripts/<C-z>
 
 This let's you type `:F foo,pj` to expand the first file that matches `*f*o*o*`
 within that directory. Adding a comma as `:f ,,pj` will show the autocomplete
 menu for that directory. See `:h wcm` and `:h mapmode-c` for more details.
 
-Vim has a global working directory (`:cd`) and a local to window (that includes
-splits) working directory (`:lcd`). Use these for making project paths relative
-and not absolute (`app/dir` instead of `/Users/foo/dev/app/dir`).
+Vim has a global working directory `:cd` and a local to window (that includes
+splits) working directory `:lcd`. Use these for making project paths relative
+as `app/dir` and not absolute like `/Users/foo/dev/app/dir`.
 
 Hitting `<C-w>` with any expanded path deletes back to the last Word - use to
 move up directories quickly.
 
-
 Links
 -----
 
-[GitHub Repo](http://github.com/mattsacks/vim-fuzzee/)  
-[vim.org](http://www.vim.org/scripts/script.php?script_id=3716)  
-[Github Author](http://github.com/mattsacks/)  
-[Twitter](http://twitter.com/mattsa)  
+[GitHub Repo](http://github.com/mattsacks/vim-fuzzee/)
+[vim.org](http://www.vim.org/scripts/script.php?script_id=3716)
+[Github Author](http://github.com/mattsacks/)
+[Twitter](http://twitter.com/mattsa)
 
 Credit to [@tpope](https://github.com/tpope) for his fuzzy-globbing utility.
