@@ -30,17 +30,21 @@ endfunction
 
 function! s:fuzzglob(arg,L,P)
   let s:head = ''
+  let dir    = escape(expand('%'), ' ')
+  let updir  = escape(expand('%:h'), ' ')
+  let cwd    = escape(getcwd(), ' ')
+
   if a:arg =~ '^\s*$'
     if &buftype == 'nofile'
-      if expand('%') =~ '^$' " new buffer is blank
+      if dir =~ '^$' " new buffer is blank
         return s:sortlist(globpath('/', '*'), 1)
       else
-        return s:sortlist(globpath('%'.'/', '*'), 1)
+        return s:sortlist(globpath(dir, '*'), 1)
       endif
-    elseif expand('%') =~ '^$'
-      return s:sortlist(globpath(getcwd(), '*'), 1)
-    else 
-      return s:sortlist(globpath('%:h', '*'), 1)
+    elseif dir =~ '^$'
+      return s:sortlist(globpath(cwd, '*'), 1)
+    else
+      return s:sortlist(globpath(updir, '*'), 1)
     endif
   endif
 
@@ -53,10 +57,6 @@ function! s:fuzzglob(arg,L,P)
   if a:arg =~ '^\.\/'
     let s:head = '.'
   endif
-
-  let dir   = escape(expand('%'), ' ')
-  let updir = escape(expand('%:h'), ' ')
-  let cwd   = escape(getcwd(), ' ')
 
   if a:arg =~ '^\.\.\/'
     let dots = matchlist(a:arg, '\(\.\.\/\)\+')[0]
@@ -71,9 +71,9 @@ function! s:fuzzglob(arg,L,P)
 
   let f    = s:gsub(s:gsub(f,'[^/.]','[&]*'),'%(/|^)\.@!|\.','&*')
   let f    = substitute(f, '\*\[[~`]\]\*', '$HOME', '')
-  let f    = substitute(f, '\*[\*\]\*', '\*\*\/\*', 'g') 
+  let f    = s:gsub(f, '\*[\*\]\*', '**/*')
   let tail = fnamemodify(f, ':t')
-  
+
   " if completing a directory
   if f == tail && &buftype != 'nofile'
     let ls = globpath(updir, f)
@@ -81,7 +81,7 @@ function! s:fuzzglob(arg,L,P)
     if (s:head !~ '^$')
       let ls = globpath(cwd, ' ')
     elseif f =~# '^$HOME'
-      let ls = substitute(globpath(f, ''), '\/$', '', 'g')
+      let ls = s:gsub(globpath(f, ''), '/$', '')
     elseif dir =~ '^\/$'
       let ls = globpath('/', f)
     elseif a:arg =~ '^*\/'
@@ -97,7 +97,7 @@ function! s:fuzzglob(arg,L,P)
     endif
   else
     if s:head !~ '^$'
-      let f = substitute(f, '^\.\*', '\.', '')
+      let f  = substitute(f, '^\.\*', '\.', '')
       let ls = globpath(cwd, f)
     elseif a:arg =~ '^\*\/'
       let ls = globpath(cwd, f)."\n"
@@ -106,7 +106,7 @@ function! s:fuzzglob(arg,L,P)
       let s:head = updir
       let ls = globpath(updir, f)
     else
-      let ls  = globpath(updir, f)
+      let ls = globpath(updir, f)
     endif
     let ls = s:filterglob(ls, cwd)
   endif
@@ -125,7 +125,7 @@ function! s:fuzzglob(arg,L,P)
     elseif f == tail && &buftype != 'nofile' && s:head =~ '^$'
       let s:head = updir
     endif
-    if f == tail 
+    if f == tail
       return s:sortlist(ls, 1)
     else
       return s:sortlist(ls, 0)
@@ -135,8 +135,7 @@ endfunction
 
 function! s:F(cmd, ...)
   let cmds  = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit',
-             \'L': 'lcd', 'C': 'cd'}
-  let chdir = ['L', 'C']
+              \'L': 'lcd', 'C': 'cd'}
   let cmd   = cmds[a:cmd]
   let dir   = substitute(escape(expand('%'), ' '), '\(.\)/$', '\1', '')
   let updir = substitute(escape(expand('%:h'), ' '), '\(.\)/$', '\1', '')
@@ -169,7 +168,7 @@ function! s:F(cmd, ...)
   else
     execute 'silent! '.cmd escape(f[0], ' ')
   endif
-  execute 'silent! lcd' substitute(escape(getcwd(), ' '), '\(.\)/$', '\1', '')
+  execute 'silent! lcd' escape(getcwd(), ' ')
 endfunction
 
 command! -nargs=? -complete=customlist,s:fuzzglob F  :execute s:F('E', <f-args>)
