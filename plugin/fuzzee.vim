@@ -89,7 +89,6 @@ function! s:fuzzglob(arg,L,P)
              \.globpath(cwd, fnamemodify(f, ':t'))
       let ls = s:filterglob(ls, cwd)
     elseif a:arg =~  '^*'
-      let s:head = dir
       let ls = globpath(dir, f)
       let ls = s:filterglob(ls, cwd)
     else
@@ -112,7 +111,11 @@ function! s:fuzzglob(arg,L,P)
   endif
 
   if len(ls) == 0 && tail !~ '\.'
-    if len(glob(f)) == 0
+    " defer globbing if not necessary
+    if s:head !~ '^$'
+      echomsg 'not found'
+      return ''
+    elseif len(glob(f)) == 0
       echomsg 'not found'
       return ''
     endif
