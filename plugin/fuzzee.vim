@@ -70,8 +70,8 @@ function! s:fuzzglob(arg,L,P)
   endif
 
   let f    = s:gsub(s:gsub(f,'[^/.]','[&]*'),'%(/|^)\.@!|\.','&*')
-  let f    = substitute(f, '\*\[[~`]\]\*', '$HOME', '')
   let f    = s:gsub(f, '\*[\*\]\*', '**/*')
+  let f    = substitute(f, '\*\[[~`]\]', '$HOME', '')
   let tail = fnamemodify(f, ':t')
 
   " if completing a directory
