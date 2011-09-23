@@ -70,6 +70,9 @@ function! s:fuzzglob(arg,L,P)
   endif
 
   let f    = s:gsub(s:gsub(f,'[^/.]','[&]*'),'%(/|^)\.@!|\.','&*')
+  if a:arg =~ '^\*\/'
+    let f  = substitute(f, '^\*[\*\]\*', '**', '')
+  endif
   let f    = s:gsub(f, '\*[\*\]\*', '**/*')
   let f    = substitute(f, '\*\[[~`]\]', '$HOME', '')
   let tail = fnamemodify(f, ':t')
@@ -80,13 +83,14 @@ function! s:fuzzglob(arg,L,P)
   elseif &buftype == 'nofile'
     if (s:head !~ '^$')
       let ls = globpath(cwd, ' ')
+    elseif f =~ '^\/' && f !~ '\/*$'
+      let ls = globpath('/', tail)
     elseif f =~# '^$HOME'
       let ls = s:gsub(globpath(f, ''), '/$', '')
     elseif dir =~ '^\/$'
       let ls = globpath('/', f)
     elseif a:arg =~ '^*\/'
-      let ls = globpath(cwd, f)."\n"
-             \.globpath(cwd, fnamemodify(f, ':t'))
+      let ls = globpath(cwd, f)
       let ls = s:filterglob(ls, cwd)
     elseif a:arg =~  '^*'
       let ls = globpath(dir, f)
@@ -99,8 +103,7 @@ function! s:fuzzglob(arg,L,P)
       let f  = substitute(f, '^\.\*', '\.', '')
       let ls = globpath(cwd, f)
     elseif a:arg =~ '^\*\/'
-      let ls = globpath(cwd, f)."\n"
-             \.globpath(cwd, fnamemodify(f, ':t'))
+      let ls = globpath(cwd, f)
     elseif a:arg =~  '^\*'
       let s:head = updir
       let ls = globpath(updir, f)
