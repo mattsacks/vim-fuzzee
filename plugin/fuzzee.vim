@@ -7,6 +7,7 @@ if exists('g:loaded_fuzzee') || v:version < 700
 endif
 let g:loaded_fuzzee = 1
 
+" utility {{{1
 function! s:gsub(str,pat,rep) abort
   return substitute(a:str,'\v\C'.a:pat,a:rep,'g')
 endfunction
@@ -27,13 +28,16 @@ function! s:filterglob(ls, cwd)
     let ls = substitute(a:ls, a:cwd.'/', '', 'g')
     return substitute(ls, '\.\/', '', 'g')
 endfunction
+" END utility }}}1
 
+" fuzzyglob {{{1
 function! s:fuzzglob(arg,L,P)
   let s:head = ''
   let dir    = escape(expand('%'), ' ')
   let updir  = escape(expand('%:h'), ' ')
   let cwd    = escape(getcwd(), ' ')
 
+  " before fuzzy-expansion {{{2
   if a:arg =~ '^\s*$'
     if &buftype == 'nofile'
       if dir =~ '^$' " new buffer is blank
@@ -68,7 +72,8 @@ function! s:fuzzglob(arg,L,P)
     endif
     let f = f.path
   endif
-
+  " END fuzzy-expansion }}}2
+  
   let f    = s:gsub(s:gsub(f,'[^/.]','[&]*'),'%(/|^)\.@!|\.','&*')
   if a:arg =~ '^\*\/'
     let f  = substitute(f, '^\*[\*\]\*', '**', '')
@@ -77,7 +82,7 @@ function! s:fuzzglob(arg,L,P)
   let f    = substitute(f, '\*\[[~`]\]', '$HOME', '')
   let tail = fnamemodify(f, ':t')
 
-  " if completing a directory
+  " if completing a directory {{{2
   if f == tail && &buftype != 'nofile'
     let ls = globpath(updir, f)
   elseif &buftype == 'nofile'
@@ -112,7 +117,9 @@ function! s:fuzzglob(arg,L,P)
     endif
     let ls = s:filterglob(ls, cwd)
   endif
+  " END if completing a directory }}}2
 
+  " return the globbed files {{{2
   if len(ls) == 0 && tail !~ '\.'
     " defer globbing if not necessary
     if s:head !~ '^$'
@@ -138,7 +145,9 @@ function! s:fuzzglob(arg,L,P)
     endif
   endif
 endfunction
+" END fuzzyglob }}}1
 
+" the F command {{{1
 function! s:F(cmd, ...)
   let cmds  = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit',
               \'L': 'lcd', 'C': 'cd'}
@@ -176,6 +185,7 @@ function! s:F(cmd, ...)
   endif
   execute 'silent! lcd' escape(getcwd(), ' ')
 endfunction
+" END the F command }}}1
 
 command! -nargs=? -complete=customlist,s:fuzzglob F  :execute s:F('E', <f-args>)
 command! -nargs=? -complete=customlist,s:fuzzglob FS :execute s:F('S', <f-args>)
