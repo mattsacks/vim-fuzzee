@@ -33,9 +33,9 @@ endfunction
 " fuzzyglob {{{1
 function! s:fuzzglob(arg,L,P)
   let s:head = ''
-  let dir    = escape(expand('%'), ' ')
-  let updir  = escape(expand('%:h'), ' ')
-  let cwd    = escape(getcwd(), ' ')
+  let dir    = fnameescape(expand('%'))
+  let updir  = fnameescape(expand('%:h'))
+  let cwd    = fnameescape(getcwd())
 
   " before fuzzy-expansion {{{2
   if a:arg =~ '^\s*$'
@@ -152,9 +152,9 @@ function! s:F(cmd, ...)
   let cmds  = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit',
               \'L': 'lcd', 'C': 'cd'}
   let cmd   = cmds[a:cmd]
-  let dir   = substitute(escape(expand('%'), ' '), '\(.\)/$', '\1', '')
-  let updir = substitute(escape(expand('%:h'), ' '), '\(.\)/$', '\1', '')
-  let cwd   = substitute(escape(getcwd(), ' '), '\(.\)/$', '\1', '')
+  let dir   = substitute(fnameescape(expand('%')), '\(.\)/$', '\1', '')
+  let updir = substitute(fnameescape(expand('%:h')), '\(.\)/$', '\1', '')
+  let cwd   = substitute(fnameescape(getcwd()), '\(.\)/$', '\1', '')
 
   if a:0 == 0
     if expand("%") =~# '^$'
@@ -179,11 +179,11 @@ function! s:F(cmd, ...)
   if len(f) == 0
     return
   elseif s:head !~ '^$'
-    execute 'silent! '.cmd escape(s:head.'/'.f[0], ' ')
+    execute 'silent! '.cmd fnameescape(s:head.'/'.f[0])
   else
-    execute 'silent! '.cmd escape(f[0], ' ')
+    execute 'silent! '.cmd fnameescape(f[0])
   endif
-  execute 'silent! lcd' escape(getcwd(), ' ')
+  execute 'silent! lcd' fnameescape(getcwd())
 endfunction
 " END the F command }}}1
 
