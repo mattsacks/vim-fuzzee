@@ -111,6 +111,12 @@ well as the arguments by default are relative to the current working directory.
 :FC                             Changes working directory |:cd| to a given
                                 argument.
 
+                                             *fuzzee-:FB*
+:FB                             Search the 'buflist' for a buffer using a
+                                fuzzy string in any part of it's relative or
+                                full path.  Will use the |:sb| command if your
+                                'switchbuf' setting isn't set to the default
+                                value ("").
 
 TIPS                                         *fuzzee-tips*
 
@@ -128,6 +134,10 @@ against buffers and the 'cwd'.
 Globbing is only as fast the more  information that you give it. With each
 character before and after * then Vim will be able to find your file
 more quickly.
+
+The |:FB| command can be helpful for finding files in other tabs or a
+file that has been recently opened in the current Vim session. Use the
+'switchbuf' setting to navigate open and hidden files.
 
 See the README for more information, examples, and tricks.
 

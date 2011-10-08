@@ -1,6 +1,6 @@
 " fuzzee.vim - Fuzzy expansions for :e and :E
 " Author: Matt Sacks <matt.s.sacks@gmail.com>
-" Version: 0.4
+" Version: 0.5
 
 if exists('g:loaded_fuzzee') || v:version < 700
   finish
@@ -82,7 +82,7 @@ function! s:fuzzglob(arg,L,P)
   let f    = substitute(f, '\*\[[~`]\]', '$HOME', '')
   let tail = fnamemodify(f, ':t')
 
-  " if completing a directory {{{2
+  " its globbering time {{{2
   if f == tail && &buftype != 'nofile'
     let ls = globpath(updir, f)
   elseif &buftype == 'nofile'
@@ -187,9 +187,49 @@ function! s:F(cmd, ...)
 endfunction
 " END the F command }}}1
 
+" fuzzee-buffer {{{1
+function! s:buffglob(arg,L,P)
+  let buffers = []
+  for b in range(1, bufnr('$'))
+    if bufexists(b) && buflisted(b) == 1
+      call add(buffers, bufname(b))
+    endif
+  endfor
+  if a:arg =~ '^$'
+    return buffers
+  endif
+
+  let b = s:gsub(s:gsub(a:arg,'[^/.\>]','[&].*'),'%(/|^)\.@!|\.','&')
+  let b = s:gsub(b, '\*\[ \]\*', '*')
+
+  return filter(buffers, 'v:val =~ b')
+endfunction
+
+function! s:FB(...)
+  if a:0 == 0
+    execute 'silent! b' bufname('#')
+    return
+  endif
+
+  let f = s:buffglob(a:1, '', '')
+  let b = ''
+
+  if &switchbuf !~ '^$'
+    for i in range(1, tabpagenr('$'))
+      if index(tabpagebuflist(i), bufnr(f[0])) != -1
+        let b = 's'
+        break
+      endif
+    endfor
+  endif
+  execute 'silent '.b.'b' f[0]
+endfunction
+" END fuzzee-buffer }}}1
+
 command! -nargs=? -complete=customlist,s:fuzzglob F  :execute s:F('E', <f-args>)
 command! -nargs=? -complete=customlist,s:fuzzglob FS :execute s:F('S', <f-args>)
 command! -nargs=? -complete=customlist,s:fuzzglob FV :execute s:F('V', <f-args>)
 command! -nargs=? -complete=customlist,s:fuzzglob FT :execute s:F('T', <f-args>)
 command! -nargs=? -complete=customlist,s:fuzzglob FL :execute s:F('L', <f-args>)
 command! -nargs=? -complete=customlist,s:fuzzglob FC :execute s:F('C', <f-args>)
+command! -nargs=? -complete=customlist,s:buffglob FB :execute s:FB(<f-args>)

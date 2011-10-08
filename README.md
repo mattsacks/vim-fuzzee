@@ -90,6 +90,12 @@ just a `.`
     :F              " opens up the directory above the current buffer
     :F .            " open the current working directory
 
+Say you just `:q ` the application.coffee file in vim but you want to open it back
+up quickly.
+
+    :FB applcof     " open a buffer with matching fuzzy string "*a*p*p*l*c*o*f*"
+                    " either as a relation to the cwd or full path
+
 The fuzzy-expansion works for any filepath on your system no matter where you
 are but it can always backtrace to the current working directory as well.
 Primarily, it searches in relation to what you're currently viewing.
@@ -104,6 +110,7 @@ Commands
 * `:FT` - open in a new tab
 * `:FL` - change local working directory
 * `:FC` - change working directory
+* `:FB` - open a hidden or switch to an active buffer
 
 
 Tips
@@ -119,6 +126,7 @@ Some recommended vimrc settings:
         \*.png,*.jpg,*.pdf,
         \CVS,SVN,
         \" more files to ignore here
+    set switchbuf=usetab
 
 Fuzzee.vim can be used for exploring common project filepaths and directories
 quickly with `cmap`. For instance, to match any javascripts in your `public`
@@ -139,12 +147,16 @@ as `app/dir` and not absolute like `/Users/foo/dev/app/dir`.
 Hitting `<C-w>` with any expanded path deletes back to the last Word - use to
 move up directories quickly.
 
+The `'switchbuf'` setting allows the `:FB` command to find files in other tabs or
+splits with a matching fuzzy-name. If the buffer is hidden (a file that was `:q`)
+then the command will just open the buffer in the current window.
+
 Links
 -----
 
-[GitHub Repo](http://github.com/mattsacks/vim-fuzzee/)
-[vim.org](http://www.vim.org/scripts/script.php?script_id=3716)
-[Github Author](http://github.com/mattsacks/)
+[GitHub Repo](http://github.com/mattsacks/vim-fuzzee/)  
+[vim.org](http://www.vim.org/scripts/script.php?script_id=3716)  
+[Github Author](http://github.com/mattsacks/)  
 [Twitter](http://twitter.com/mattsa)
 
 Credit to [@tpope](https://github.com/tpope) for his fuzzy-globbing utility.
