@@ -118,23 +118,27 @@ Tips
 
 Some recommended vimrc settings:
 
-    nnoremap <Leader>f :F<Space>
-    nnoremap <Leader>t :F */
-    set wildmode=list:longest,full
-    set wildmenu
-    set wildignore+=
-        \*.png,*.jpg,*.pdf,
-        \CVS,SVN,
-        \" more files to ignore here
-    set switchbuf=usetab
+```vim
+nnoremap <Leader>f :F<Space>
+nnoremap <Leader>t :F */
+set wildmode=list:longest,full
+set wildmenu
+set wildignore+=
+    \*.png,*.jpg,*.pdf,
+    \CVS,SVN,
+    \" more files to ignore here
+set switchbuf=usetab
+```
 
 Fuzzee.vim can be used for exploring common project filepaths and directories
 quickly with `cmap`. For instance, to match any javascripts in your `public`
 directory, try out the following:
 
-    set wcm=<C-z> " this is just a way to map <Tab> completion
-    cnoremap ,pj  <S-Left>public/javascripts/<End><C-z>
-    cnoremap ,,pj public/javascripts/<C-z>
+```vim
+set wcm=<C-z> " this is just a way to map <Tab> completion
+cnoremap ,pj  <S-Left>public/javascripts/<End><C-z>
+cnoremap ,,pj public/javascripts/<C-z>
+```
 
 This let's you type `:F foo,pj` to expand the first file that matches `*f*o*o*`
 within that directory. Adding a comma as `:f ,,pj` will show the autocomplete
