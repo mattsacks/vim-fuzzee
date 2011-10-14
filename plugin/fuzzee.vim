@@ -212,6 +212,9 @@ function! s:FB(...)
   endif
 
   let f = s:buffglob(a:1, '', '')
+  if len(f) == 0
+    echomsg 'no buffers found' | return
+  endif
   let b = ''
 
   if &switchbuf !~ '^$'
