@@ -56,20 +56,21 @@ First we'll use `:F` to  get to the working directory from a new Vim session in
 your home directory. Any of the following are sufficient:
 
     :F ~/dr/de/pro  " search for /Users/you/*d*r*/*d*e*/*p*r*o*
-    :F `*dro*oje    " globs for any *o*j*e* under /Users/you/*d*r*
-    :F dr*project   " search for any filepath *d*r*p*r*o*j*e*c*t* under the cwd
+    :F `*dro*oje    " globs for any *o*j*e* under /Users/you/*d*r*o*/**/
+    :F dr*project   " search for any filepath *d*r**/*p*r*o*j*e*c*t* under the cwd
 
-Then, either `:FL` or `:FL .` will both work to change the local working
-directory to the project path.
+Then `:FL` will change the local working directory to the project path or
+whatever directory the current buffer is in. `:FL` and `:FC` both accept
+arguments as well.
 
 A quick `:F */alcf` will glob the current working directory for `*a*l*c*f*` to
 edit `app/coffeescripts/application.coffee`.
 
 By hitting `:F <TAB>`, Fuzzee.vim will show you everything in the current
-buffer's directory first but that's only if you give it no arguments. So this
-will be everything in `app/coffeescripts/`. To move to `models.coffee` quickly,
-type `:F md`. Remember, by default it will always refer first in relation to the
-current buffer.
+buffer's directory first but that's only if you give it no arguments. This will
+be everything in `app/coffeescripts/`. To edit `models.coffee`, type `:F md`.
+Remember, by default it will always refer first in relation to the current
+buffer and if no matches are found then show the current working directory.
 
 `:F ./` will search for anything in the current working directory.  However,
 it's not always necessary. All of the following work to edit the `Cakefile` from
@@ -85,13 +86,13 @@ you're currently editing. So at `app/coffeescripts/application.coffee`, then tha
 will look in `app/coffeescripts`.
 
 To open directories quickly, Fuzzee.vim can also be invoked with no arguments or
-just a `.`
+just `.`
     
     :F              " opens up the directory above the current buffer
     :F .            " open the current working directory
 
-Say you just `:q ` the application.coffee file in vim but you want to open it back
-up quickly.
+Say you just `:quit` the application.coffee file in vim but you want to open it
+back up quickly.
 
     :FB applcof     " open a buffer with matching fuzzy string "*a*p*p*l*c*o*f*"
                     " either as a relation to the cwd or full path
