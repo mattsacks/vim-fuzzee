@@ -66,8 +66,8 @@ function! s:fuzzglob(arg,L,P)
     let s:head = '.'
   endif
 
-  " expand the full path if given a relative '../' argument and prepend to the
-  " :F argument
+  " expand the full path if given a relative '../' argument and prepend
+  " to the :F argument
   if a:arg =~ '^\.\.\/'
     let dots = matchlist(a:arg, '\(\.\.\/\)\+')[0]
     let path = matchlist(a:arg, '\%(\.\.\/\)\+\(.*\)$')[1]
@@ -94,8 +94,8 @@ function! s:fuzzglob(arg,L,P)
   if f == tail && &buftype != 'nofile'
     let ls = globpath(updir, f)
   elseif &buftype == 'nofile'
-    if (s:head !~ '^$')
-      let ls = globpath(cwd, ' ')
+    if s:head !~ '^$'
+      let ls = globpath(cwd, tail)
     elseif f =~ '^\/' && f !~ '\/*$'
       let ls = globpath('/', tail)
     elseif f =~# '^$HOME'
