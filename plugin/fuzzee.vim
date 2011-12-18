@@ -171,12 +171,12 @@ function! s:F(cmd, ...)
     else
       execute 'silent! ' cmd updir
     endif
-    return
+    return ''
   endif
 
   if a:1 =~ '^\.$'
     execute 'silent! '.cmd cwd
-    return
+    return ''
   endif
 
   let f = s:fuzzglob(a:1, '', '')
@@ -185,7 +185,7 @@ function! s:F(cmd, ...)
     let s:head = ''
   endif
   if len(f) == 0
-    return
+    return ''
   elseif s:head !~ '^$'
     execute 'silent! '.cmd fnameescape(s:head.'/'.f[0])
   else
@@ -216,13 +216,13 @@ endfunction
 function! s:FB(...)
   if a:0 == 0
     execute 'silent! b' bufname('#')
-    return
+    return ''
   endif
 
   let f = s:buffglob(a:1, '', '')
   if len(f) == 0
     echomsg 'no buffers found'
-    return
+    return ''
   endif
   let s = ''
 
