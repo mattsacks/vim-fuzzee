@@ -37,9 +37,14 @@ endfunction
 " fuzzyglob {{{1
 function! s:fuzzglob(arg,L,P)
   let s:head = ''
-  let dir    = fnameescape(expand('%'))
-  let updir  = fnameescape(expand('%:h'))
-  let cwd    = fnameescape(getcwd())
+  if &buftype == 'nofile' && expand('%') =~ '^$'
+    let dir   = fnameescape(b:netrw_curdir)
+    let updir = fnameescape(fnamemodify(b:netrw_curdir, ':h'))
+  else
+    let dir   = fnameescape(expand('%'))
+    let updir = fnameescape(expand('%:h'))
+  endif
+  let cwd = fnameescape(getcwd())
 
   " before fuzzy-expansion {{{2
   if a:arg =~ '^\s*$'
@@ -159,14 +164,17 @@ function! s:F(cmd, ...)
   let cmds  = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit',
               \'L': 'lcd', 'C': 'cd'}
   let cmd   = cmds[a:cmd]
-  let dir   = substitute(fnameescape(expand('%')), '\(.\)/$', '\1', '')
-  let updir = substitute(fnameescape(expand('%:h')), '\(.\)/$', '\1', '')
+  if &buftype == 'nofile' && expand('%') =~ '^$'
+    let dir   = substitute(fnameescape(b:netrw_curdir), '\(.\)/$', '\1', '')
+    let updir = substitute(fnameescape(fnamemodify(b:netrw_curdir, ':h')), '\(.\)/$', '\1', '')
+  else
+    let dir   = substitute(fnameescape(expand('%')), '\(.\)/$', '\1', '')
+    let updir = substitute(fnameescape(expand('%:h')), '\(.\)/$', '\1', '')
+  endif
   let cwd   = substitute(fnameescape(getcwd()), '\(.\)/$', '\1', '')
 
   if a:0 == 0
-    if expand("%") =~# '^$'
-      execute 'silent! ' cmd cwd
-    elseif &buftype ==# 'nofile'
+    if &buftype == 'nofile'
       execute 'silent! ' cmd dir
     else
       execute 'silent! ' cmd updir
@@ -191,7 +199,9 @@ function! s:F(cmd, ...)
   else
     execute 'silent! '.cmd fnameescape(f[0])
   endif
-  execute 'silent! lcd' fnameescape(getcwd())
+  if &buftype != 'nofile'
+    execute 'silent! lcd' fnameescape(getcwd())
+  endif
 endfunction
 " END the F command }}}1
 
