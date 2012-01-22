@@ -37,7 +37,7 @@ endfunction
 " fuzzyglob {{{1
 function! s:fuzzglob(arg,L,P)
   let s:head = ''
-  if &buftype == 'nofile' && expand('%') =~ '^$'
+  if &ft == 'netrw' && expand('%') =~ '^$'
     let dir   = fnameescape(b:netrw_curdir)
     let updir = fnameescape(fnamemodify(b:netrw_curdir, ':h'))
   else
@@ -48,7 +48,7 @@ function! s:fuzzglob(arg,L,P)
 
   " before fuzzy-expansion {{{2
   if a:arg =~ '^\s*$'
-    if &buftype == 'nofile'
+    if &ft == 'netrw'
       if dir =~ '^$'
         return s:sortlist(globpath('/', '*'), 1)
       else
@@ -76,7 +76,7 @@ function! s:fuzzglob(arg,L,P)
   if a:arg =~ '^\.\.\/'
     let dots = matchlist(a:arg, '\(\.\.\/\)\+')[0]
     let path = matchlist(a:arg, '\%(\.\.\/\)\+\(.*\)$')[1]
-    if &buftype == 'nofile'
+    if &ft == 'netrw'
       let f = fnamemodify(dir.'/'.dots, ':p')
     else
       let f = fnamemodify(updir.'/'.dots, ':p')
@@ -96,9 +96,9 @@ function! s:fuzzglob(arg,L,P)
   let tail = fnamemodify(f, ':t')
 
   " its globbering time {{{2
-  if f == tail && &buftype != 'nofile'
+  if f == tail && &ft != 'netrw'
     let ls = globpath(updir, f)
-  elseif &buftype == 'nofile'
+  elseif &ft == 'netrw'
     if s:head !~ '^$'
       let ls = globpath(cwd, tail)
     elseif f =~ '^\/' && f !~ '\/*$'
@@ -145,9 +145,9 @@ function! s:fuzzglob(arg,L,P)
   elseif len(ls) == 0
     return s:sortlist(glob(f), 0)
   else
-    if &buftype == 'nofile' && f == tail && s:head =~ '^$'
+    if &ft == 'netrw' && f == tail && s:head =~ '^$'
       let s:head = fnamemodify(split(ls, "\n")[0], ':h')
-    elseif f == tail && &buftype != 'nofile' && s:head =~ '^$'
+    elseif f == tail && &ft != 'netrw' && s:head =~ '^$'
       let s:head = updir
     endif
     if f == tail
@@ -164,7 +164,7 @@ function! s:F(cmd, ...)
   let cmds  = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit',
               \'L': 'lcd', 'C': 'cd'}
   let cmd   = cmds[a:cmd]
-  if &buftype == 'nofile' && expand('%') =~ '^$'
+  if &ft == 'netrw' && expand('%') =~ '^$'
     let dir   = substitute(fnameescape(b:netrw_curdir), '\(.\)/$', '\1', '')
     let updir = substitute(fnameescape(fnamemodify(b:netrw_curdir, ':h')), '\(.\)/$', '\1', '')
   else
@@ -174,7 +174,7 @@ function! s:F(cmd, ...)
   let cwd   = substitute(fnameescape(getcwd()), '\(.\)/$', '\1', '')
 
   if a:0 == 0
-    if &buftype == 'nofile'
+    if &ft == 'netrw'
       execute 'silent! ' cmd dir
     else
       execute 'silent! ' cmd updir
@@ -199,7 +199,7 @@ function! s:F(cmd, ...)
   else
     execute 'silent! '.cmd fnameescape(f[0])
   endif
-  if &buftype != 'nofile'
+  if &ft != 'netrw'
     execute 'silent! lcd' fnameescape(getcwd())
   endif
 endfunction
