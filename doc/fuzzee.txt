@@ -117,6 +117,24 @@ well as the arguments by default are relative to the current working directory.
                                 full path.  Will use the |:sb| command if your
                                 'switchbuf' setting isn't set to the default
                                 value ("").
+                                            
+:FuzzeeMap <cmap> <path>                     *FuzzeeMap*
+                                Create a 'cmap' that will use the 'wcm' to
+                                auto-complete a mapping inside a specific
+                                path, or if given no argument, insert that
+                                path. Like everything else, uses 'wildmode'.
+
+
+FUNCTIONS                                    *fuzzee-commands*
+
+Functions defined in autoload/fuzzee.vim can be used as an interface to set
+preferences to the Fuzzee plugin directly inside of your 'vimrc'.
+
+fuzzee#map('cmap', 'path')                   *fuzzee-map*
+                                Creates a custom 'cmap' exactly the same as
+                                |FuzzeeMap|  but the passed arguments must be
+                                surrounded in single-quotes.
+
 
 TIPS                                         *fuzzee-tips*
 
@@ -138,6 +156,9 @@ more quickly.
 The |:FB| command can be helpful for finding files in other tabs or a
 file that has been recently opened in the current Vim session. Use the
 'switchbuf' setting to navigate open and hidden files.
+
+FuzzeeMap is very useful for navigating to the same directories without
+having to type much of the path.
 
 See the README for more information, examples, and tricks.
 

@@ -2,9 +2,10 @@ fuzzee.vim
 ==========
 
 Fuzzee.vim will tab-complete paths relative to the current working directory in
-Vim and also the current buffer for use with `:e[dit]` and `:E[xplore]`. It also
-ignores files, directories, and filetypes listed in the user-defined
-`wildignore` setting and has support for multi-directory globbing.
+Vim and also the current buffer for use with `:e[dit]`, `:E[xplore]`, and many
+other splitting options. It also ignores files, directories, and filetypes
+listed in the user-defined `wildignore` setting and has support for
+multi-directory globbing and custom-path mappings.
 
 
 Install
@@ -26,7 +27,7 @@ matches some filepath on your system.
 It accepts 3 different types of arguments:
 
 * Strings that expand to files relevant to the current buffer
-* The current working directory
+* The same but ones directly in the root of the current working directory
 * Absolute paths
 
 Let's give an example working directory and how `:F` can be used to navigate
@@ -114,6 +115,41 @@ Commands
 * `:FB` - open a hidden or switch to an active buffer
 
 
+Path Mappings
+--------
+Fuzzee.vim can be used for exploring common project filepaths and directories
+quickly with a cmapping. For instance, to match any javascripts in your `public`
+directory, try out the following:
+
+```vim
+set wcm=<C-z> " this is just a way to map <Tab> completion
+FuzzeeMap ,js javascript
+FuzzeeMap ,cs css
+FuzzeeMap ,st specs/spec
+```
+
+How this works is that you'd type in `:F mod,js` which would then expand and
+tab-complete to `:F javascript/model.js` or whatever file matches `*m*o*d*`. If
+you just want to explore the directory, `:F ,js` will show a menu of files in
+the javascript directory.
+
+If you have multiple directories of the same name, remember you can specify from
+the root with a prepended `./` as `./javascript`.  Lastly, if you just want to
+glob down from a certain path in your project you can use a mapping like
+`FuzzeeMap ,js app/javascript*` which will look through all folders from that
+starting point.
+
+To set default mappings in your `vimrc`, use the following:
+
+```vim
+call fuzzee#map(',ac', 'app/coffeescripts')
+call fuzzee#map(',js', 'javascript')
+call fuzzee#map(',cs', 'css')
+```
+
+Make sure to read the next section for recommended wildmenu options.
+
+
 Tips
 ----
 
@@ -131,37 +167,21 @@ set wildignore+=
 set switchbuf=usetab
 ```
 
-Fuzzee.vim can be used for exploring common project filepaths and directories
-quickly with `cmap`. For instance, to match any javascripts in your `public`
-directory, try out the following:
-
-```vim
-set wcm=<C-z> " this is just a way to map <Tab> completion
-cnoremap ,pj  <S-Left>public/javascripts/<End><C-z>
-cnoremap ,,pj public/javascripts/<C-z>
-```
-
-This let's you type `:F foo,pj` to expand the first file that matches `*f*o*o*`
-within that directory. Adding a comma as `:f ,,pj` will show the autocomplete
-menu for that directory. See `:h wcm` and `:h mapmode-c` for more details.
-
-Vim has a global working directory `:cd` and a local to window (that includes
+* Vim has a global working directory `:cd` and a local to window (that includes
 splits) working directory `:lcd`. Use these for making project paths relative
 as `app/dir` and not absolute like `/Users/foo/dev/app/dir`.
 
-Hitting `<C-w>` with any expanded path deletes back to the last Word - use to
+* Hitting `<C-w>` with any expanded path deletes back to the last word - use to
 move up directories quickly.
 
-The `'switchbuf'` setting allows the `:FB` command to find files in other tabs or
+* The `'switchbuf'` setting allows the `:FB` command to find files in other tabs or
 splits with a matching fuzzy-name. If the buffer is hidden (a file that was `:q`)
 then the command will just open the buffer in the current window.
 
 Links
 -----
 
-[GitHub Repo](http://github.com/mattsacks/vim-fuzzee/)  
+[GitHub Repo](http://github.com/mattsa/vim-fuzzee/)  
 [vim.org](http://www.vim.org/scripts/script.php?script_id=3716)  
-[Github Author](http://github.com/mattsacks/)  
+[Github Author](http://github.com/mattsa)  
 [Twitter](http://twitter.com/mattsa)
-
-Credit to [@tpope](https://github.com/tpope) for his fuzzy-globbing utility.
