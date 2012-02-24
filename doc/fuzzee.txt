@@ -125,7 +125,7 @@ well as the arguments by default are relative to the current working directory.
                                 path. Like everything else, uses 'wildmode'.
 
 
-FUNCTIONS                                    *fuzzee-commands*
+FUNCTIONS                                    *fuzzee-functions*
 
 Functions defined in autoload/fuzzee.vim can be used as an interface to set
 preferences to the Fuzzee plugin directly inside of your 'vimrc'.
