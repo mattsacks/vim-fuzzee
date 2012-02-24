@@ -249,10 +249,10 @@ function! s:FB(...)
 endfunction
 " END fuzzee-buffer }}}1
 
-command! -nargs=? -complete=customlist,s:fuzzglob F  :execute s:F('E', <f-args>)
-command! -nargs=? -complete=customlist,s:fuzzglob FS :execute s:F('S', <f-args>)
-command! -nargs=? -complete=customlist,s:fuzzglob FV :execute s:F('V', <f-args>)
-command! -nargs=? -complete=customlist,s:fuzzglob FT :execute s:F('T', <f-args>)
-command! -nargs=? -complete=customlist,s:fuzzglob FL :execute s:F('L', <f-args>)
-command! -nargs=? -complete=customlist,s:fuzzglob FC :execute s:F('C', <f-args>)
-command! -nargs=? -complete=customlist,s:buffglob FB :execute s:FB(<f-args>)
+command! -nargs=? -bar -complete=customlist,s:fuzzglob F  :execute s:F('E', <f-args>)
+command! -nargs=? -bar -complete=customlist,s:fuzzglob FS :execute s:F('S', <f-args>)
+command! -nargs=? -bar -complete=customlist,s:fuzzglob FV :execute s:F('V', <f-args>)
+command! -nargs=? -bar -complete=customlist,s:fuzzglob FT :execute s:F('T', <f-args>)
+command! -nargs=? -bar -complete=customlist,s:fuzzglob FL :execute s:F('L', <f-args>)
+command! -nargs=? -bar -complete=customlist,s:fuzzglob FC :execute s:F('C', <f-args>)
+command! -nargs=? -bar -complete=customlist,s:buffglob FB :execute s:FB(<f-args>)
