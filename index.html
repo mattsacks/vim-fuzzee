@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>fuzzee.vim by mattsa</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>fuzzee.vim</h1>
+<p>Fuzzy expansions for :e and :E</p>
+        <p class="view"><a href="https://github.com/mattsa/vim-fuzzee">View the Project on GitHub <small>mattsa/vim-fuzzee</small></a></p>
+        <ul>
+          <li><a href="https://github.com/mattsa/vim-fuzzee/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mattsa/vim-fuzzee/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mattsa/vim-fuzzee">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>Fuzzee.vim will tab-complete paths relative to the current working directory in
+Vim and also the current buffer for use with <code>:e[dit]</code>, <code>:E[xplore]</code>, and many
+other splitting options. It also ignores files, directories, and filetypes
+listed in the user-defined <code>wildignore</code> setting and has support for
+multi-directory globbing and custom-path mappings.</p>
+
+<h2>Install</h2>
+
+<p>Install with <a href="https://github.com/tpope/vim-pathogen">vim-pathogen</a> in your
+configured bundles folder.</p>
+
+<p>Or you can extract <code>fuzzee.vim</code> from <code>plugins/</code> and place it in your
+<code>~/.vim/plugins/</code> directory with the others.</p>
+
+<h2>Usage</h2>
+
+<p>The <code>:F</code> command can be given any fuzzily-typed string that, when expanded,
+matches some filepath on your system.</p>
+
+<p>It accepts 3 different types of arguments:</p>
+
+<ul>
+<li>Strings that expand to files relevant to the current buffer</li>
+<li>The same but ones directly in the root of the current working directory</li>
+<li>Absolute paths</li>
+</ul><p>Let's give an example working directory and how <code>:F</code> can be used to navigate
+around it depending on what file you're currently viewing. Say the <code>cwd</code>, or
+current working directory, looks something like:</p>
+
+<p><strong>~/Dropbox/dev/project</strong></p>
+
+<pre><code>app/
+    coffeescripts/
+******  application.coffee ******
+        models.coffee
+        collections.coffee
+lib/
+    scripts.js
+public/
+    stylesheets/
+        sass/
+        css/
+    javascripts/
+        application.js
+        models.js
+        collections.js
+Cakefile
+</code></pre>
+
+<p>First we'll use <code>:F</code> to  get to the working directory from a new Vim session in
+your home directory. Any of the following are sufficient:</p>
+
+<pre><code>:F ~/dr/de/pro  " search for /Users/you/*d*r*/*d*e*/*p*r*o*
+:F `*dro*oje    " globs for any *o*j*e* under /Users/you/*d*r*o*/**/
+:F dr*project   " search for any filepath *d*r**/*p*r*o*j*e*c*t* under the cwd
+</code></pre>
+
+<p>Then <code>:FL</code> will change the local working directory to the project path or
+whatever directory the current buffer is in. <code>:FL</code> and <code>:FC</code> both accept
+arguments as well.</p>
+
+<p>A quick <code>:F */alcf</code> will glob the current working directory for <code>*a*l*c*f*</code> to
+edit <code>app/coffeescripts/application.coffee</code>.</p>
+
+<p>By hitting <code>:F &lt;TAB&gt;</code>, Fuzzee.vim will show you everything in the current
+buffer's directory first but that's only if you give it no arguments. This will
+be everything in <code>app/coffeescripts/</code>. To edit <code>models.coffee</code>, type <code>:F md</code>.
+Remember, by default it will always refer first in relation to the current
+buffer and if no matches are found then show the current working directory.</p>
+
+<p><code>:F ./</code> will search for anything in the current working directory.  However,
+it's not always necessary. All of the following work to edit the <code>Cakefile</code> from
+the currently edited .coffee file:</p>
+
+<pre><code>:F cak          " search in the directory above the buffer for *c*a*k*. if 
+                " nothing is found, then search the current working directory.
+:F ./ckf        " search in the current working directory for *c*k*f*
+:F */cake       " glob for any filepath of *c*a*k*e* under the cwd
+</code></pre>
+
+<p>Respectively, <code>:F ../</code> will search for anything in the directory above what
+you're currently editing. So at <code>app/coffeescripts/application.coffee</code>, then that
+will look in <code>app/coffeescripts</code>.</p>
+
+<p>To open directories quickly, Fuzzee.vim can also be invoked with no arguments or
+just <code>.</code></p>
+
+<pre><code>:F              " opens up the directory above the current buffer
+:F .            " open the current working directory
+</code></pre>
+
+<p>Say you just <code>:quit</code> the application.coffee file in vim but you want to open it
+back up quickly.</p>
+
+<pre><code>:FB applcof     " open a buffer with matching fuzzy string "*a*p*p*l*c*o*f*"
+                " either as a relation to the cwd or full path
+</code></pre>
+
+<p>The fuzzy-expansion works for any filepath on your system no matter where you
+are but it can always backtrace to the current working directory as well.
+Primarily, it searches in relation to what you're currently viewing.</p>
+
+<h2>Commands</h2>
+
+<ul>
+<li>
+<code>:F</code>  - open a fuzzy-string filepath</li>
+<li>
+<code>:FS</code> - open up in a split</li>
+<li>
+<code>:FV</code> - open in a vertical split</li>
+<li>
+<code>:FT</code> - open in a new tab</li>
+<li>
+<code>:FL</code> - change local working directory</li>
+<li>
+<code>:FC</code> - change working directory</li>
+<li>
+<code>:FB</code> - open a hidden or switch to an active buffer</li>
+</ul><h2>Path Mappings</h2>
+
+<p>Fuzzee.vim can be used for exploring common project filepaths and directories
+quickly with a cmapping. For instance, to match any javascripts in your <code>public</code>
+directory, try out the following:</p>
+
+<div class="highlight">
+<pre><span class="k">set</span> <span class="nb">wcm</span><span class="p">=&lt;</span>C<span class="p">-</span>z<span class="p">&gt;</span> <span class="c">" this is just a way to map &lt;Tab&gt; completion</span>
+FuzzeeMap <span class="p">,</span><span class="nb">js</span> javascript
+FuzzeeMap <span class="p">,</span><span class="k">cs</span> css
+FuzzeeMap <span class="p">,</span><span class="k">st</span> specs/spec
+</pre>
+</div>
+
+
+<p>How this works is that you'd type in <code>:F mod,js</code> which would then expand and
+tab-complete to <code>:F javascript/model.js</code> or whatever file matches <code>*m*o*d*</code>. If
+you just want to explore the directory, <code>:F ,js</code> will show a menu of files in
+the javascript directory.</p>
+
+<p>If you have multiple directories of the same name, remember you can specify from
+the root with a prepended <code>./</code> as <code>./javascript</code>.  Lastly, if you just want to
+glob down from a certain path in your project you can use a mapping like
+<code>FuzzeeMap ,js app/javascript*</code> which will look through all folders from that
+starting point.</p>
+
+<p>To set default mappings in your <code>vimrc</code>, use the following:</p>
+
+<div class="highlight">
+<pre><span class="k">call</span> fuzzee#map<span class="p">(</span><span class="s1">',ac'</span><span class="p">,</span> <span class="s1">'app/coffeescripts'</span><span class="p">)</span>
+<span class="k">call</span> fuzzee#map<span class="p">(</span><span class="s1">',js'</span><span class="p">,</span> <span class="s1">'javascript'</span><span class="p">)</span>
+<span class="k">call</span> fuzzee#map<span class="p">(</span><span class="s1">',cs'</span><span class="p">,</span> <span class="s1">'css'</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Make sure to read the next section for recommended wildmenu options.</p>
+
+<h2>Tips</h2>
+
+<p>Some recommended vimrc settings:</p>
+
+<div class="highlight">
+<pre><span class="nb">nnoremap</span> <span class="p">&lt;</span>Leader<span class="p">&gt;</span><span class="k">f</span> :F<span class="p">&lt;</span>Space<span class="p">&gt;</span>
+<span class="nb">nnoremap</span> <span class="p">&lt;</span>Leader<span class="p">&gt;</span><span class="k">t</span> :F */
+<span class="k">set</span> <span class="nb">wildmode</span><span class="p">=</span><span class="nb">list</span>:longest<span class="p">,</span>full
+<span class="k">set</span> <span class="nb">wildmenu</span>
+<span class="k">set</span> <span class="nb">wildignore</span><span class="p">+=</span>
+    \*.png<span class="p">,</span>*.jpg<span class="p">,</span>*.pdf<span class="p">,</span>
+    \CVS<span class="p">,</span>SVN<span class="p">,</span>
+    \" <span class="nb">more</span> <span class="k">files</span> <span class="k">to</span> ignore here
+<span class="k">set</span> <span class="nb">switchbuf</span><span class="p">=</span>usetab
+</pre>
+</div>
+
+
+<ul>
+<li><p>Vim has a global working directory <code>:cd</code> and a local to window (that includes
+splits) working directory <code>:lcd</code>. Use these for making project paths relative
+as <code>app/dir</code> and not absolute like <code>/Users/foo/dev/app/dir</code>.</p></li>
+<li><p>Hitting <code>&lt;C-w&gt;</code> with any expanded path deletes back to the last word - use to
+move up directories quickly.</p></li>
+<li><p>The <code>'switchbuf'</code> setting allows the <code>:FB</code> command to find files in other tabs or
+splits with a matching fuzzy-name. If the buffer is hidden (a file that was <code>:q</code>)
+then the command will just open the buffer in the current window.</p></li>
+</ul><h2>Links</h2>
+
+<p><a href="http://github.com/mattsa/vim-fuzzee/">GitHub Repo</a><br><a href="http://www.vim.org/scripts/script.php?script_id=3716">vim.org</a><br><a href="http://github.com/mattsa">Github Author</a><br><a href="http://twitter.com/mattsa">Twitter</a></p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/mattsa">mattsa</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
