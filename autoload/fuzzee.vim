@@ -4,8 +4,17 @@
 function! fuzzee#expand(path)
   let l:fCmd = matchstr(getcmdline(), '^F\w\=\s')
   let l:fArg = matchstr(getcmdline(), '^F\w\=\s\zs.*$')
-  let l:path = a:path =~ '\/$' || a:path =~ '\*$' ? a:path : a:path . '/'
-  return l:fCmd . (l:fArg =~ '^$' ? l:path : l:path . l:fArg)
+  let l:extension = ''
+  if a:path =~ '\/$' || a:path =~ '\*$'
+    let l:path = a:path
+  elseif a:path =~ '!\w\+$'
+    let l:path      = matchstr(a:path, '^.\{-}\ze!')
+    let l:extension = matchstr(a:path, '!\zs\w\+$')
+  else
+    let l:path = a:path . '/'
+  endif
+  return l:fCmd . (l:fArg =~ '^$' ? l:path . l:extension :
+        \ l:path . l:fArg . l:extension)
 endfunction
 
 function! fuzzee#map(map, path, ...)

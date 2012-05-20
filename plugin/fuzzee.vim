@@ -163,7 +163,7 @@ endfunction
 " the F command {{{1
 function! s:F(cmd, ...)
   let cmds  = {'E': 'edit', 'S': 'split', 'V': 'vsplit', 'T': 'tabedit',
-              \'L': 'lcd', 'C': 'cd'}
+              \'L': 'lcd',  'C': 'cd'}
   let cmd   = cmds[a:cmd]
   if &ft == 'netrw' && expand('%') =~ '^$'
     let dir   = substitute(fnameescape(b:netrw_curdir), '\(.\)/$', '\1', '')
@@ -172,7 +172,7 @@ function! s:F(cmd, ...)
     let dir   = substitute(fnameescape(expand('%')), '\(.\)/$', '\1', '')
     let updir = substitute(fnameescape(expand('%:h')), '\(.\)/$', '\1', '')
   endif
-  let cwd   = substitute(fnameescape(getcwd()), '\(.\)/$', '\1', '')
+  let cwd = substitute(fnameescape(getcwd()), '\(.\)/$', '\1', '')
 
   if a:0 == 0
     if &ft == 'netrw'
