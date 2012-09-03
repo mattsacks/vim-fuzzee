@@ -196,12 +196,12 @@ function! s:F(cmd, ...)
   if len(f) == 0
     return ''
   elseif s:head !~ '^$'
-    execute 'silent! '.cmd fnameescape(s:head.'/'.f[0])
+    return 'silent '.cmd.' '.fnameescape(s:head.'/'.f[0])
   else
-    execute 'silent! '.cmd fnameescape(f[0])
+    return 'silent '.cmd.' '.fnameescape(f[0])
   endif
   if &ft != 'netrw'
-    execute 'silent! lcd' fnameescape(getcwd())
+    return 'silent lcd' fnameescape(getcwd())
   endif
 endfunction
 " END the F command }}}1
