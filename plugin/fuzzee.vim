@@ -245,7 +245,7 @@ function! s:FB(...)
       endif
     endfor
   endif
-  execute 'silent '.s.'b' f[0]
+  return 'silent '.s.'b' f[0]
 endfunction
 " END fuzzee-buffer }}}1
 

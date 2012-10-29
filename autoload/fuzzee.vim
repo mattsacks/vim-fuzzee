@@ -20,4 +20,5 @@ endfunction
 function! fuzzee#map(map, path, ...)
   exe 'cmap' a:map . " <C-\\>efuzzee#expand('" . a:path . "')<CR>" . nr2char(&wcm)
 endfunction
+
 command! -complete=file -nargs=+ FuzzeeMap :call fuzzee#map(<f-args>)
