@@ -226,8 +226,7 @@ endfunction
 
 function! s:FB(...)
   if a:0 == 0
-    execute 'silent! b' bufname('#')
-    return ''
+    return 'silent b '.bufname('#')
   endif
 
   let f = s:buffglob(a:1, '', '')
@@ -245,7 +244,7 @@ function! s:FB(...)
       endif
     endfor
   endif
-  return 'silent '.s.'b' f[0]
+  return 'silent '.s.'b '.f[0]
 endfunction
 " END fuzzee-buffer }}}1
 
